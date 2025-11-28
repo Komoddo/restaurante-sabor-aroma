@@ -1,0 +1,5 @@
+{
+    "liveshare.connectionMode": "direct",
+    "python.analysis.autoImportCompletions": false,
+    "python.analysis.typeCheckingMode": "off"
+}
