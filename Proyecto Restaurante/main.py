@@ -15,7 +15,7 @@ import sqlite3
 import datetime
 import csv
 import pandas as pd
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import os
 from typing import List, Dict, Tuple, Optional
 from Modelo.Producto import Producto
