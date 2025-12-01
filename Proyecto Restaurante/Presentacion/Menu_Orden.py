@@ -7,7 +7,7 @@ from Servicio.producto_servicio import ProductoServicio
 from Modelo.Orden import Orden
 from Presentacion.SubMenu_nueva_Orden import submenu_nuevaOrden
 from Presentacion.Catalogo_Productos import catalogo_productos
-from Presentacion.subMenu_Seleccion_Mesa import submenu_seleccionMesa
+from Presentacion.SubMenu_Seleccion_Mesa import submenu_seleccionMesa
 
 
 ms = MesaServicio()
@@ -16,7 +16,7 @@ cs = ClienteServicio()
 os = OrdenServicio()
 ods = OrdenDetalleServicio()
 
-def menu_ordenes():
+def menu_orden():
 
     os.obtener_ordenes_bd()
     nueva_orden = Orden()
