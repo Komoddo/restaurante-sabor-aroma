@@ -17,23 +17,23 @@ def menu_pedidos():
     while True:
         print("\n🍽 MENÚ DE PEDIDOS")
         print("1. Generar pedido desde orden")
-        print("2. Ver pedidos")
+        print("2. Ver pedidos recientes")
         print("0. Volver")
 
         opcion = input("Opción: ")
         if opcion == "1":
             print("\n👥 LISTA DE ORDENES PENDIENTES")
             print("-" * 90)
-            print(f"{'ID':<8} {'Mesa':<15}    {'Cliente':<30}    {'Fecha':<18}     {'Total':>10}")
+            print(f"{'Mesa':<15}    {'Cliente':<30}    {'Fecha':<18}     {'Total':>10}")
             print("-" * 90)
             pendientes = os.obtener_ordenes_pendientes()
             if pendientes:
                 for op in pendientes:
                     mesa = ms.obtener_mesa_por_id(op.id_mesa)
                     cliente = cs.obtener_cliente_por_id(op.id_cliente)
-                    print(f"{op.id_orden:<6}  mesa {mesa.numero:<12} | {cliente.nombre} {cliente.apellido:<26} | {op.fecha_hora:<24} | S/{op.total:>6.2f}")
+                    print(f"mesa {mesa.numero:<12} | {cliente.nombre} {cliente.apellido:<26} | {op.fecha_hora:<24} | S/{op.total:>6.2f}")
                 print("0. Regresar")
-                print("\nSeleccione una orden: ")
+                print("\nSeleccione la mesa: ")
                 id = input("➤  ").strip().lower()
                 if (id == "0"):
                     print("Saliendo...")
@@ -56,8 +56,9 @@ def menu_pedidos():
                         if opcion=="s":
                             
                             # Actualizamos informacion de orden
-                            if os.actualizar_estado(orden.id_orden, "preparado"):
-                                ms.actualizar_estado(orden.id_mesa, "disponible")
+                            if os.actualizar_estado_pedido_bd(orden.id_orden, "preparado"):
+                                if ms.actualizar_estado_mesa_bd(orden.id_mesa, "disponible"):
+                                    if ps.agregar_pedido_bd(pedido):
                                 print(f"✅ orden {orden.id_orden} cancelada con éxito")
                             else:
                                 print("⚠️ Error al cancelar la orden")

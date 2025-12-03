@@ -49,7 +49,7 @@ class MesaServicio:
             mesa = next((m for m in LISTA_MESAS if m.id_mesa == id_mesa),None)
         return mesa
 
-    def actualizar_estado(self, mesa_id, nuevo_estado):
+    def actualizar_estado_mesa_bd(self, mesa_id, nuevo_estado):
         conn = Conexion()
         cursor = conn.conectar()
         try:

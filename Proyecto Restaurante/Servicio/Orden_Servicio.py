@@ -107,7 +107,7 @@ class OrdenServicio:
             return pendientes
         return None
 
-    def actualizar_estado(self, id_orden, nuevo_estado):
+    def actualizar_estado_pedido_bd(self, id_orden, nuevo_estado):
         try:
             conn = conn()
             cursor = conn.conectar()

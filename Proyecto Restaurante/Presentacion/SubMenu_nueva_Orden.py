@@ -99,7 +99,7 @@ def submenu_nuevaOrden():
                     orden.id_orden = os.crear_orden_bd(orden)
                     if(orden.id_orden):
                         os.agregar_orden_lista(orden)
-                        ms.actualizar_estado(orden.id_mesa,"Ocupado")
+                        ms.actualizar_estado_mesa_bd(orden.id_mesa,"Ocupado")
                         print("Creando orden de pedido...")
                         return orden
                     else:

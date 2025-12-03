@@ -3,7 +3,7 @@ from Modelo.PedidoDetalle import PedidoDetalle
 
 class Pedido:
     def __init__(self, id_pedido, id_orden, impuestos, 
-                 descuento, total, metodo_pago, estado_pago="Pagado"):
+                 descuento, total, metodo_pago, estado="Pagado"):
         self.id_pedido = id_pedido
         self.id_orden = id_orden
         self.fecha = datetime.now()
@@ -11,7 +11,7 @@ class Pedido:
         self.descuento = descuento
         self.total = total
         self.metodo_pago = metodo_pago
-        self.estado_pago = estado_pago      # Pagado / Anulado
+        self.estado = estado      # Pagado / Anulado
         
         self.detalles = []                  # lista de DetallePedido
 

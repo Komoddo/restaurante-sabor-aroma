@@ -10,16 +10,30 @@ class PedidoServicio:
     # --------------------------
     #   CREATE
     # --------------------------
-    def crear_pedido(self, cliente_id, mesa_id, empleado_id, total=0.0):
+    def agregar_pedido_bd(p : Pedido):
         conn = Conexion()
         cursor = conn.cursor()
         
         fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         cursor.execute("""
-            INSERT INTO pedidos (cliente_id, mesa_id, empleado_id, total, fecha)
-            VALUES (?, ?, ?, ?, ?)
-        """, (cliente_id, mesa_id, empleado_id, total, fecha))
+            INSERT INTO pedidos (
+                id_orden, 
+                fecha, 
+                impuestos, 
+                descuento, 
+                total, 
+                metodo_pago,
+                estado)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (
+            p.id_orden, 
+            p.fecha, 
+            p.impuestos, 
+            p.descuento, 
+            p.total, 
+            p.metodo_pago
+            p.estado))
 
         conn.commit()
         return cursor.lastrowid   # retorna el ID generado

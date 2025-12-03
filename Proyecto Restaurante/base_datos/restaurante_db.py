@@ -23,7 +23,7 @@ class RestaurantDB:
         # Tabla de productos
         self.cursor.execute('''
                 CREATE TABLE IF NOT EXISTS productos (
-                    idProducto      INTEGER PRIMARY KEY AUTOINCREMENT,
+                    id_producto      INTEGER PRIMARY KEY AUTOINCREMENT,
                     nombre          TEXT NOT NULL,
                     descripcion     TEXT NULL,
                     precio          REAL NOT NULL,
@@ -66,7 +66,7 @@ class RestaurantDB:
                 descuento       REAL DEFAULT 0,
                 total           REAL NOT NULL,
                 metodo_pago     TEXT,
-                estado_pago     TEXT,                     
+                estado          TEXT,                     
                 FOREIGN KEY (id_orden) REFERENCES ordenes (id_orden)
             )
         ''')  
@@ -75,13 +75,13 @@ class RestaurantDB:
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS detalle_pedido (
                 id_detalle      INTEGER PRIMARY KEY AUTOINCREMENT,
-                idPedido        INTEGER NOT NULL,
-                idProducto      INTEGER NOT NULL,
+                id_pedido        INTEGER NOT NULL,
+                id_producto      INTEGER NOT NULL,
                 cantidad        INTEGER NOT NULL,
                 precio_unitario REAL NOT NULL,
                 subtotal        REAL NOT NULL,
-                FOREIGN KEY(idPedido) REFERENCES pedidos(id_pedido),
-                FOREIGN KEY(idProducto) REFERENCES productos(idProducto)
+                FOREIGN KEY(id_pedido) REFERENCES pedidos(id_pedido),
+                FOREIGN KEY(id_producto) REFERENCES productos(id_producto)
             )
         ''')
 
@@ -114,7 +114,7 @@ class RestaurantDB:
                 subtotal        REAL NOT NULL,
                 nota            TEXT,
                 FOREIGN KEY(id_orden) REFERENCES ordenes(id_orden),
-                FOREIGN KEY(id_producto) REFERENCES productos(idProducto)
+                FOREIGN KEY(id_producto) REFERENCES productos(id_producto)
             )
         ''')
 
@@ -127,7 +127,7 @@ class RestaurantDB:
                 precio_anterior REAL,
                 precio_nuevo    REAL NOT NULL,
                 fecha_registro  DATETIME DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (id_producto) REFERENCES productos (idProducto)       
+                FOREIGN KEY (id_producto) REFERENCES productos (id_producto)       
             )
         ''')
         self.conn.commit()
