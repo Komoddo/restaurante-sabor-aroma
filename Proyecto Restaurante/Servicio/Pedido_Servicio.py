@@ -32,7 +32,7 @@ class PedidoServicio:
             p.impuestos, 
             p.descuento, 
             p.total, 
-            p.metodo_pago
+            p.metodo_pago,
             p.estado))
 
         conn.commit()
