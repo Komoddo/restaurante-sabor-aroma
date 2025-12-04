@@ -8,7 +8,7 @@ from Modelo.Orden import Orden
 from Modelo.Cliente import Cliente
 from Modelo.OrdenDetalle import OrdenDetalle
 from Presentacion.Menu_Cliente import submenu_clientes
-from Presentacion.subMenu_Seleccion_Mesa import submenu_seleccionMesa
+from Presentacion.SubMenu_Seleccion_Mesa import submenu_seleccionMesa
 
 # from Principal import LISTA_PRODUCTOS, LISTA_CLIENTES, LISTA_EMPLEADOS, LISTA_MESAS
 

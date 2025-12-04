@@ -23,7 +23,7 @@ from Servicio.producto_servicio import ProductoServicio
 
 from base_datos.restaurante_db import RestaurantDB
 
-from Presentacion.menu_principal import menu_principal
+from Presentacion.Menu_Principal import menu_principal
 
 
 # ============================================================================
@@ -413,13 +413,6 @@ class RestauranteGestion:
             conn = sqlite3.connect('base_datos/restaurante.db')
             cursor = conn.cursor()
 
-            
-
-            
-
-            
-            
-
             # Tabla de reservas
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS reservas (
@@ -433,10 +426,6 @@ class RestauranteGestion:
                     FOREIGN KEY (idMesa) REFERENCES mesas (idMesa)
                 )
             ''')
-
-            
-
-            
 
             # Tabla de auditoría de precios
             cursor.execute('''

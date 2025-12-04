@@ -4,7 +4,6 @@ from Modelo.Cliente import Cliente
 cs = ClienteServicio()
 
 def submenu_clientes(cliente:Cliente=None):
-        # self.producto_servicio = ProductoServicio()
         """Submenú para gestión de clientes."""
         print("\n" + "="*50)
         print("👥 GESTIÓN DE CLIENTES")
