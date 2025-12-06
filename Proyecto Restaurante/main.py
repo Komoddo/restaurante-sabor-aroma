@@ -15,16 +15,12 @@ import sqlite3
 import datetime
 import csv
 import pandas as pd
-# import matplotlib.pyplot as plt
 import os
 from typing import List, Dict, Tuple, Optional
 from Modelo.Producto import Producto
 from Servicio.producto_servicio import ProductoServicio
-
 from base_datos.restaurante_db import RestaurantDB
-
 from Presentacion.Menu_Principal import menu_principal
-
 
 # ============================================================================
 # CLASE PRINCIPAL CON TODAS LAS MEJORAS INTEGRADAS
@@ -412,11 +408,7 @@ class RestauranteGestion:
         try:
             conn = sqlite3.connect('base_datos/restaurante.db')
             cursor = conn.cursor()
-
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
+            
             # Tabla de reservas
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS reservas (

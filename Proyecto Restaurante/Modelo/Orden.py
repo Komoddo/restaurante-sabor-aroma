@@ -8,15 +8,24 @@ from Modelo.OrdenDetalle import OrdenDetalle
 #     ANULADO = "cancelado"
 
 class Orden:
-    def __init__(self, id_orden=None, id_mesa=None, id_empleado=None, id_cliente=None, fecha_hora=None, nro_personas = 1,estado="Pendiente", nota=None, total=0):
+    def __init__(self, 
+                 id_orden, 
+                 id_mesa, 
+                 id_empleado, 
+                 id_cliente, 
+                 fecha_hora,
+                 nro_personas,
+                 estado, 
+                 nota, 
+                 total):
         self.id_orden = id_orden
         self.id_mesa = id_mesa
         self.id_empleado = id_empleado
         self.id_cliente = id_cliente
-        self.fecha_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        self.nro_personas = nro_personas
-        self.estado = estado
-        self.nota = nota 
+        self.fecha_hora = datetime.now().strftime("%Y-%m-%d %H:%M:%S") if fecha_hora is None else fecha_hora
+        self.nro_personas = 1 if nro_personas==0 else nro_personas
+        self.estado = "pendiente" if estado is None else estado
+        self.nota = nota
         self.total = total
         
         self.detalles = []             # lista de DetalleOrden

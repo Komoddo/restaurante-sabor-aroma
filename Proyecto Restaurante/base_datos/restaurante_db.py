@@ -60,8 +60,9 @@ class RestaurantDB:
         self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS pedidos (
                 id_pedido       INTEGER PRIMARY KEY AUTOINCREMENT,
-                id_orden       INTEGER,
+                id_orden        INTEGER,
                 fecha           DATETIME NOT NULL,
+                subtotal        REAL NOT NULL,
                 impuestos       REAL,            
                 descuento       REAL DEFAULT 0,
                 total           REAL NOT NULL,
@@ -71,9 +72,9 @@ class RestaurantDB:
             )
         ''')  
 
-        # Tabla de detalle_Pedidos
+        # Tabla de detalle_Pedido
         self.cursor.execute('''
-            CREATE TABLE IF NOT EXISTS detalle_pedido (
+            CREATE TABLE IF NOT EXISTS detalle_pedido(
                 id_detalle      INTEGER PRIMARY KEY AUTOINCREMENT,
                 id_pedido        INTEGER NOT NULL,
                 id_producto      INTEGER NOT NULL,
@@ -94,7 +95,7 @@ class RestaurantDB:
                 id_cliente      INTEGER,
                 fecha_hora      TEXT,
                 nro_personas    INTEGER DEFAULT 1,
-                estado          TEXT NOT NULL,   -- Pendiente, En cocina, Preparado, Servido
+                estado          TEXT NOT NULL,   -- Pendiente, En cocina, Preparado
                 nota            TEXT,
                 total_parcial   REAL DEFAULT 0,
                 FOREIGN KEY(id_mesa) REFERENCES Mesas(id),
