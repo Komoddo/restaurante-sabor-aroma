@@ -2,13 +2,8 @@ from datetime import datetime
 from Modelo.PedidoDetalle import PedidoDetalle
 
 class Pedido:
-<<<<<<< Updated upstream
-    def __init__(self, id_pedido, id_orden, impuestos, 
-                 descuento, total, metodo_pago, estado_pago="Pagado"):
-=======
     def __init__(self, id_pedido, id_orden, fecha, subtotal, impuestos, 
                  descuento, total, metodo_pago, estado):
->>>>>>> Stashed changes
         self.id_pedido = id_pedido
         self.id_orden = id_orden
         self.fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S") if fecha is None else fecha
@@ -16,13 +11,8 @@ class Pedido:
         self.impuestos = impuestos
         self.descuento = descuento
         self.total = total
-<<<<<<< Updated upstream
-        self.metodo_pago = metodo_pago
-        self.estado_pago = estado_pago      # Pagado / Anulado
-=======
         self.metodo_pago = "efectivo" if metodo_pago is None else metodo_pago
         self.estado = "pagado" if estado is None else estado    # Pagado / Anulado
->>>>>>> Stashed changes
         
         self.detalles = []                  # lista de DetallePedido
 

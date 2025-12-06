@@ -107,13 +107,10 @@ class OrdenServicio:
             return pendientes
         return None
 
-<<<<<<< Updated upstream
-    def actualizar_estado(self, id_orden, nuevo_estado):
-=======
     def actualizar_estado_orden_bd(self, id_orden, nuevo_estado):
         conn = Conexion()
         cursor = conn.conectar()
->>>>>>> Stashed changes
+
         try:
             cursor.execute("""
             UPDATE ordenes SET estado = ? WHERE id_orden = ?

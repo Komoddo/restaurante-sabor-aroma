@@ -408,11 +408,7 @@ class RestauranteGestion:
         try:
             conn = sqlite3.connect('base_datos/restaurante.db')
             cursor = conn.cursor()
-<<<<<<< Updated upstream
-
-=======
             
->>>>>>> Stashed changes
             # Tabla de reservas
             cursor.execute('''
                 CREATE TABLE IF NOT EXISTS reservas (
