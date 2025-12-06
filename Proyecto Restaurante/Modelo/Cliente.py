@@ -5,15 +5,3 @@ class Cliente: #clase cliente
         self.apellido = apellido
         self.email = email
         self.telefono = telefono
-
-    def __str__(self): # es un string modificado
-        return f"Cliente({self.id_cliente}, {self.nombre} {self.apellido}, {self.email})"
-
-    def get_info(self):
-        return {
-            'id_cliente': self.id_cliente,
-            'nombre': self.nombre,
-            'apellido': self.apellido,
-            'email': self.email,
-            'telefono': self.telefono
-        }

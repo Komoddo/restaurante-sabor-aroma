@@ -57,6 +57,7 @@ class MesaServicio:
             UPDATE mesas SET estado=? WHERE id=?
             """, (nuevo_estado, mesa_id))
             conn.commit()
+            return cursor.rowcount
         except Exception as ex:
             return []
         finally:

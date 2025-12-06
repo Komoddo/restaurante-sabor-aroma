@@ -4,6 +4,7 @@ from Modelo.Cliente import Cliente
 from Modelo.Empleado import Empleado
 from Modelo.Mesa import Mesa
 from Modelo.Orden import Orden
+from Modelo.Pedido import Pedido
 
 
 # Listas globales que funcionan como "base de datos en memoria"
@@ -12,3 +13,4 @@ LISTA_CLIENTES: List[Cliente] = []
 LISTA_EMPLEADOS: List[Empleado] = []
 LISTA_MESAS: List[Mesa] = []
 LISTA_ORDENES: List[Orden] = []
+LISTA_PEDIDOS: List[Pedido] = []
