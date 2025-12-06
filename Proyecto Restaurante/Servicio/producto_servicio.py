@@ -181,7 +181,7 @@ class ProductoServicio:
          
     def buscar_productos(self, nombre:str) -> List[Producto]:
         """Busca un producto que coincida con el nombre en la lista de productos."""
-        productos = [p for p in LISTA_PRODUCTOS if nombre in p.nombre.lower()]
+        productos = [p for p in LISTA_PRODUCTOS if nombre.strip().lower() in p.nombre.lower()]
         return productos
          
     def obtener_catalogo(self):

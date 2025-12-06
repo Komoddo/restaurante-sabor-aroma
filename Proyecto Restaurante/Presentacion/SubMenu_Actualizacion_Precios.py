@@ -13,15 +13,16 @@ def submenu_actualizar_precios():
     print("="*50)
     # Mostrar productos actuales
     print("\n📋 PRODUCTOS ACTUALES:")
-    print("-" * 60)
-    print(f"{'ID':<3} {'Nombre':<20}     {'Categoría'}     {'Precio':<12}")
-    print("-" * 60)
+    print("-" * 100)
+    print(f"{'ID':<7}{'Nombre':<35}{'Categoría':<25}{'Precio':>15}")
+    print("-" * 100)
     productos = ps.obtener_lista_productos_disponibles()
     if productos:
         for p in productos:
-                    print(f"{p.id_producto}   {p.nombre:<25}   |   {p.categoria:<45}  |   S/{p.precio:>6.2f}")
+            print(f"{'0' if p.id_producto<10 else ''}{(str(p.id_producto)+'.'):<7}{p.nombre:<26}|       {p.categoria:<25}|      S/{p.precio:>6.2f}")
     else:
-        print("No hay productos registrados")   
+        print("No hay productos registrados")
+    print(f"{'0.':<5} 🔙 Regresar")  
     print("\n¿Cómo desea actualizar los precios?")
     print("1. Actualizar precio de un producto específico")
     print("2. Aplicar aumento/descuento porcentual por categoría")

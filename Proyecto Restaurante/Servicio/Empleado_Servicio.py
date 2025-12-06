@@ -126,3 +126,8 @@ class EmpleadoServicio:
         lista_cargos = sorted({p.cargo for p in LISTA_EMPLEADOS})
         cargos = {i: c for i, c in enumerate(lista_cargos, start=1)}
         return cargos
+    
+    def crear_estados(self):
+        lista_estados = sorted({p.estado for p in LISTA_EMPLEADOS})
+        estados = {i: c for i, c in enumerate(lista_estados, start=1)}
+        return estados
