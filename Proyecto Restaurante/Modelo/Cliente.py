@@ -9,17 +9,3 @@ class Cliente:
         self.apellido = apellido
         self.email = email
         self.telefono = telefono
-
-   # Devuelve un texto que muestra los datos principales del cliente cuando se imprime el objeto
-    def __str__(self): 
-        return f"Cliente({self.id_cliente}, {self.nombre} {self.apellido}, {self.email})"
-
-    # Devuelve los datos del cliente organizados en un diccionario (clave : valor)
-    def get_info(self):
-        return {
-            'id_cliente': self.id_cliente,
-            'nombre': self.nombre,
-            'apellido': self.apellido,
-            'email': self.email,
-            'telefono': self.telefono
-        }

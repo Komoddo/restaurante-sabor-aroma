@@ -53,14 +53,7 @@ class EmpleadoServicio:
         """Busca un producto por su nombre y apellido en la lista de Empleado."""
         empleado = next((e for e in LISTA_EMPLEADOS if dni.strip()==e.dni), None)
         return empleado             # Retorna el empleado encontrado o None
-    
-    # def Buscar_Empleado(self, nombre: str):
-    #     """Busca un producto por su nombre y apellido en la lista de Empleado."""
-    #     self.f_Empleado.clear()
-    #     if " " in nombre:
-    #         n_a = nombre.split()
-    #     self.f_Empleado = [e for e in self.Empleados if (n_a[0].strip() in e.nombre and n_a.strip() in e.apellido)]
-
+  
     def actualizar_Empleado_bd(self, e: Empleado):
         conn = Conexion()          # Conexión a BD                  
         cursor = conn.conectar()   # Cursor para ejecutar consulta
@@ -127,3 +120,8 @@ class EmpleadoServicio:
         lista_cargos = sorted({p.cargo for p in LISTA_EMPLEADOS})          # Obtiene cargos únicos
         cargos = {i: c for i, c in enumerate(lista_cargos, start=1)}       # Asigna números consecutivos
         return cargos                                                      # Retorna diccionario {1: 'Gerente', 2: 'Cajero', ...}
+    
+    def crear_estados(self):
+        lista_estados = sorted({p.estado for p in LISTA_EMPLEADOS})
+        estados = {i: c for i, c in enumerate(lista_estados, start=1)}
+        return estados

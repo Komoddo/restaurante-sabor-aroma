@@ -107,19 +107,21 @@ class OrdenServicio:
             return pendientes
         return None
 
-    def actualizar_estado_pedido_bd(self, id_orden, nuevo_estado):
-        try:
-            conn = conn()
-            cursor = conn.conectar()
+    def actualizar_estado_orden_bd(self, id_orden, nuevo_estado):
+        conn = Conexion()
+        cursor = conn.conectar()
 
-            sql = "UPDATE ordenes SET estado = ? WHERE id_orden = ?"
-            cursor.execute(sql, (nuevo_estado, id_orden))                # Actualiza estado de la orden
-
-            conn.conn.commit()            # Guarda cambios
-            return cursor.rowcount         # Retorna filas afectadas
-        except Exception as e:
-            print("Error al actualizar estado:", e)
-
+        try:    # Actualiza estado de la orden
+            cursor.execute("""
+            UPDATE ordenes SET estado = ? WHERE id_orden = ?
+            """, (nuevo_estado, id_orden))
+            conn.commit()     # Guarda cambios
+            return cursor.rowcount    # Retorna filas afectadas
+        except Exception as ex:
+            return None
+        finally:
+            conn.cerrar()
+            
     def validar_orden_completa(self, orden: Orden):
         # Valida que la orden tenga mesa, empleado y cliente asignados
         if not orden.id_mesa or not orden.id_empleado or not orden.id_cliente:

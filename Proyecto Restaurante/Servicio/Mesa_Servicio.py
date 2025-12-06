@@ -59,6 +59,7 @@ class MesaServicio:
             UPDATE mesas SET estado=? WHERE id=?
             """, (nuevo_estado, mesa_id))               # Actualiza estado de la mesa
             conn.commit()                               # Guarda cambios en BD
+            return cursor.rowcount
         except Exception as ex:
             return []                                    # Retorna lista vacía si h
         finally:

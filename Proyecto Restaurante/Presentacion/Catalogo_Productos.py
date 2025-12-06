@@ -27,9 +27,9 @@ def catalogo_productos():
         
         if opcion == "1":
             """Muestra el catálogo completo de productos."""
-            print("\n" + "*"*90)
+            print("\n")
             print("CATÁLOGO PRODUCTOS")
-            print("*"*90)
+            print("="*90)
             print(f"{'ID':<6}{'Nombre':<25}{'Descripción':<40}{'Precio':>10}")
             estructura = ps.obtener_catalogo()     # obtiene productos agrupados por categoría
             if(estructura):
@@ -41,7 +41,7 @@ def catalogo_productos():
                      # Muestra cada producto con su id, nombre, descripción y precio
                     for p in items:
                         print(f"{'0' if p.id_producto<1<0 else ''}{p.id_producto}{'.':<3}{p.nombre:<25} | {p.descripcion:<40} | S/{p.precio:>6.2f}")
-                        print("-"*90)
+                        # print("-"*90)
             else:
                 print("sin productos*")
             print("0. <- REGRESAR")

@@ -197,8 +197,8 @@ def menu_orden():
                                         print(f"Seguro que desea cancelar la orden de la mesa {mesa.numero}? (s/n): ")
                                         opcion = input("➤  ").strip().lower()
                                         if opcion=="s":
-                                            if os.actualizar_estado_pedido_bd(orden.id_orden, "cancelado"):
-                                                ms.actualizar_estado_mesa_bd(orden.id_mesa, "disponible")
+                                            if os.actualizar_estado_orden_bd(orden.id_orden, "cancelado"):
+                                                ms.actualizar_estado(orden.id_mesa, "disponible")
                                                 print(f"✅ orden {orden.id_orden} cancelada con éxito")
                                             else:
                                                 print("⚠️ Error al cancelar la orden")

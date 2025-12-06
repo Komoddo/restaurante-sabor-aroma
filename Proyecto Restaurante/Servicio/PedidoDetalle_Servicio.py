@@ -5,22 +5,44 @@ class DetallePedidoServicio:
     def __init__(self):
         detalles = []
 
-    def agregar_detalle(self, detalle: PedidoDetalle):
-        conn = Conexion()
-        cursor = conn.cursor()
-        cursor.execute("""
-            INSERT INTO detalles_pedido (pedido_id, producto_id, cantidad, subtotal)
-            VALUES (?, ?, ?, ?)
-        """, (detalle.pedido_id, detalle.producto_id,
-              detalle.cantidad, detalle.subtotal))
-        conn.commit()
+    def agregar_detalles_bd(self, pedido_detalles: list):
+        if pedido_detalles:
+            try:
+                conexion = Conexion()
+                cursor = conexion.conectar()
+        
+                for detalle in pedido_detalles:
+                    sql = """ INSERT INTO detalle_pedido(id_pedido, id_producto, cantidad, precio_unitario, subtotal)
+                        VALUES (?, ?, ?, ?, ?) """
 
-    def obtener_detalles(self, pedido_id):
-        self.cursor.execute("""
-            SELECT * FROM detalles_pedido WHERE pedido_id=?
-        """, (pedido_id,))
-        rows = self.cursor.fetchall()
-        return [
-            PedidoDetalle(id=r[0], pedido_id=r[1], producto_id=r[2], cantidad=r[3], subtotal=r[4])
-            for r in rows
-        ]
+                    cursor.execute(sql, (
+                        detalle.id_pedido,
+                        detalle.id_producto,
+                        detalle.cantidad,
+                        detalle.precio_unitario,
+                        detalle.subtotal
+                    ))
+
+                conexion.conn.commit()
+                return cursor.lastrowid
+            except Exception as e:
+                    print("Error al agregar detalle:", e)
+                    
+            finally:
+                conexion.cerrar()
+
+    def obtener_detalles_por_pedido(self, id_pedido):
+        try:
+            conexion = Conexion()
+            cursor = conexion.conectar()
+
+            sql = "SELECT * FROM detalle_pedido WHERE id_pedido = ?"
+            cursor.execute(sql, (id_pedido,))
+            rows = cursor.fetchall()
+            if rows:
+                return [PedidoDetalle(id_detalle=row[0], id_pedido=row[1], id_producto=row[2], 
+                                     cantidad=row[3], precio_unitario=row[4], subtotal=row[6]) for row in rows]
+            return []
+
+        except Exception as e:
+            print("Error al obtener detalles:", e)

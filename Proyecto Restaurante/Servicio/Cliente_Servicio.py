@@ -64,12 +64,12 @@ class ClienteServicio:
     
     def Buscar_clientes(self, nombre: str, apellido: str):
         """Busca un producto por su nombre y apellido en la lista de cliente."""
-        f_clientes = [c for c in LISTA_CLIENTES if (nombre.strip() in c.nombre and apellido.strip() in c.apellido)]
+        f_clientes = [c for c in LISTA_CLIENTES if (nombre.strip().lower() in c.nombre and apellido.strip().lower() in c.apellido)]
         if f_clientes:
             return f_clientes
         return None
     
-    def actualizar_cliente(self, c: Cliente):
+    def actualizar_cliente_bd(self, c: Cliente):
         conn = Conexion()
         cursor = conn.conectar()
 
