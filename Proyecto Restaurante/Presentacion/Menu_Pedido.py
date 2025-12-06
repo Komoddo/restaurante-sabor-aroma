@@ -1,21 +1,21 @@
-from datetime import datetime
-from Servicio.Cliente_Servicio import ClienteServicio
-from Servicio.producto_servicio import ProductoServicio
-from Servicio.Mesa_Servicio import MesaServicio
-from Servicio.Pedido_Servicio import PedidoServicio
+from datetime import datetime                                       # Para manejar fechas y horas
+from Servicio.Cliente_Servicio import ClienteServicio               # Servicio que maneja operaciones sobre clientes
+from Servicio.Mesa_Servicio import MesaServicio                     # Servicio que maneja operaciones sobre mesas
+from Servicio.Pedido_Servicio import PedidoServicio                 # Servicio que maneja operaciones sobre pedidos
+from Servicio.Orden_Servicio import OrdenServicio                   # Servicio que maneja operaciones sobre órdenes
+from Servicio.OrdenDetalle_Servicio import OrdenDetalleServicio     # Servicio que maneja los detalles de las órdenes
 from Servicio.PedidoDetalle_Servicio import DetallePedidoServicio
-from Servicio.Orden_Servicio import OrdenServicio
-from Modelo.Pedido import Pedido
-from Modelo.PedidoDetalle import PedidoDetalle
+from Modelo.Pedido import Pedido                                    # Modelo Pedido: estructura de datos del pedido
+from Modelo.PedidoDetalle import PedidoDetalle                      # Modelo PedidoDetalle: estructura de los detalles de pedido
+from Servicio.producto_servicio import ProductoServicio
 from Presentacion.Ticket_Pedido import ticket_pedido
 
-pes = PedidoServicio()
+ps = PedidoServicio()        # Instancia para gestionar pedidos 
 pds = DetallePedidoServicio()
-ors = OrdenServicio()
-ms = MesaServicio()
-cs = ClienteServicio()
+os = OrdenServicio()         # Instancia para gestionar órdenes
+ms = MesaServicio()          # Instancia para gestionar mesas
+cs = ClienteServicio()       # Instancia para gestionar clientes
 ps = ProductoServicio()
-
 
 """Irterfaz para la gestion de los pedidos"""
 def menu_pedido():
@@ -35,11 +35,11 @@ def menu_pedido():
             print("-" * 90)
             print(f"{'Mesa':<15}    {'Cliente':<30}    {'Fecha':<18}     {'Total':>10}")
             print("-" * 90)
-            pendientes = ors.obtener_ordenes_pendientes()
+            pendientes = ors.obtener_ordenes_pendientes() # Obtener todas las órdenes pendientes
             if pendientes:
                 for op in pendientes:
-                    mesa = ms.obtener_mesa_por_id(op.id_mesa)
-                    cliente = cs.obtener_cliente_por_id(op.id_cliente)
+                    mesa = ms.obtener_mesa_por_id(op.id_mesa)   # Obtener información de la mesa
+                    cliente = cs.obtener_cliente_por_id(op.id_cliente)   # Obtener información del cliente
                     print(f"mesa {mesa.numero:<12} | {cliente.nombre} {cliente.apellido:<26} | {op.fecha_hora:<24} | S/{op.total:>6.2f}")
                 print("0. Regresar")
                 print("\nSeleccione la mesa: ")
@@ -54,14 +54,18 @@ def menu_pedido():
                         mesa = ms.obtener_mesa_por_id(orden.id_mesa)
                         print("\n" + "="*80)
                         cliente = cs.obtener_cliente_por_id(orden.id_cliente)
-                        print(f"🛒 ORDEN N° {orden.id_orden} MESA {mesa.numero}")
-                        print("="*80)
+
+                        # Mostrar detalles de la orden seleccionada
+                        print(f"\n🛒 ORDEN N° {orden.id_orden} MESA {mesa.numero}")
+                        print("-"*80)
                         print(f"Fecha: {datetime.strptime(orden.fecha_hora, '%Y-%m-%d %H:%M:%S')}")
                         print(f"Cliente: {cliente.nombre} {cliente.apellido}")
                         print(f"Mesa asignada: {mesa.numero:<10} Nro. personas: {orden.nro_personas:<10}")
                         print(f"Estado: {orden.estado}")
 
-                        print(f"\nDesea generar un pedido de la orden {orden.id_orden}? (s/n): ")
+
+                        # Confirmar si se desea generar pedido desde esta orden
+                        print(f"Desea generar un pedido de la orden {orden.id_orden}? (s/n): ")
                         opcion = input("➤  ").strip().lower()
                         
                         if opcion=="s":
@@ -76,7 +80,7 @@ def menu_pedido():
                                 metodo_pago = "efectivo",
                                 estado = "pagado"
                                 )
-                            
+                                                      
                             for do in orden.detalles:
                                     pedido_nuevo.agregar_detalle(PedidoDetalle(
                                         id_detalle=0,
@@ -91,7 +95,7 @@ def menu_pedido():
                                 for detalle in pedido_nuevo.detalles:
                                     detalle.id_pedido = pedido_nuevo.id_pedido
                                 if pds.agregar_detalles_bd(pedido_nuevo.detalles):
-                                    if ors.actualizar_estado_orden_bd(orden.id_orden, "preparado"):
+                                    if ors.actualizar_estado_orden_bd(orden.id_orden, "preparado"): # Actualizar estado de la orden y de la mesa
                                          if ms.actualizar_estado_mesa_bd(orden.id_mesa, "disponible"):
                                             print("✅ Pedido creado con éxito")
                             else:

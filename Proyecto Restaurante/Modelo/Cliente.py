@@ -1,4 +1,8 @@
-class Cliente: #clase cliente
+
+"""Esta clase guarda y maneja los datos de un cliente."""
+
+# Inicializa el objeto cliente asignando sus datos básicos al momento de crearlo
+class Cliente: 
     def __init__(self, id_cliente=0, nombre=None, apellido=None, email=None, telefono=None):
         self.id_cliente = id_cliente
         self.nombre = nombre

@@ -1,37 +1,37 @@
-from base_datos.conexion_db import Conexion
-from Modelo.Orden import Orden
-from Modelo.Mesa import Mesa
-from Servicio.OrdenDetalle_Servicio import OrdenDetalleServicio
-from Principal import LISTA_ORDENES
+from base_datos.conexion_db import Conexion                           # Manejo de la conexión a la base de datos           
+from Modelo.Orden import Orden                                        # Modelo Orden
+from Modelo.Mesa import Mesa                                          # Modelo Mesa
+from Servicio.OrdenDetalle_Servicio import OrdenDetalleServicio       # Servicio para manejar los detalles de la orden
+from Principal import LISTA_ORDENES                                   # Lista que almacena temporalmente todas las órdenes cargadas en memoria durante la ejecución
 
 class OrdenServicio:
     def __init__(self):
-        self.ordenes = []
-        self.f_ordenes = []
+        self.ordenes = []                  # Lista interna de órdenes
+        self.f_ordenes = []                # Lista interna de órdenes
 
     def agregar_orden_lista(self, orden:Orden):
-        LISTA_ORDENES.append(orden)
+        LISTA_ORDENES.append(orden)                 # Agrega la orden a la lista global en memoria
 
     def crear_orden_bd(self, o: Orden):
         try:
-            conn = Conexion()
-            cursor = conn.conectar()
+            conn = Conexion()                          # Conexión a BD
+            cursor = conn.conectar()                   # Cursor para ejecutar SQL
             cursor.execute("""
                 INSERT INTO ordenes (id_mesa, id_empleado, id_cliente, fecha_hora, nro_personas, estado, nota, total_parcial)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
                 (o.id_mesa, o.id_empleado, o.id_cliente, o.fecha_hora, o.nro_personas, o.estado, o.nota, o.total))
 
-            conn.commit()
-            return cursor.lastrowid
+            conn.commit()                                 # Guarda cambios en BD
+            return cursor.lastrowid                       # Retorna ID de la orden creada         
         except Exception as e:
             print("Error al crear orden:", e)
         finally:
-            conn.cerrar()
+            conn.cerrar()                                 # Cierra la conexión
 
-    def actualizar_total_orden_bd(self, o: Orden):
+    def actualizar_total_orden_bd(self, o: Orden):        
         try:
-            conexion = Conexion()
-            cursor = conexion.conectar()
+            conexion = Conexion()                           # Conexión a BD
+            cursor = conexion.conectar()                    # Cursor para ejecutar SQL
 
             cursor.execute('''UPDATE ordenes SET total_parcial = ? WHERE id_orden = ? ''', (o.total ,o.id_orden))
             conexion.conn.commit()
@@ -58,11 +58,11 @@ class OrdenServicio:
     def obtener_por_id(self, id_orden):
         try:
             conexion = Conexion()
-            cursor = conexion.conectar()
+            cursor = conexion.conectar()                             # Cursor para consulta
 
             sql = "SELECT * FROM ordenes WHERE id_orden = ?"
             cursor.execute(sql, (id_orden,))
-            row = cursor.fetchone()
+            row = cursor.fetchone()                                    # Obtiene la fila correspondiente
 
             if row:
                 return Orden(*row)
@@ -81,12 +81,12 @@ class OrdenServicio:
 
     def obtener_ordenes_bd(self):
         try:
-            LISTA_ORDENES.clear()
-            ods = OrdenDetalleServicio()
+            LISTA_ORDENES.clear()          # Limpia lista antes de cargar datos
+            ods = OrdenDetalleServicio()       # Servicio para obtener detalles
             conn = Conexion()
             cursor = conn.conectar()
             cursor.execute("SELECT * FROM ordenes")
-            rows = cursor.fetchall()
+            rows = cursor.fetchall()                # Obtiene todas las filas
 
             # return [Orden(*row) for row in rows]
             LISTA_ORDENES.extend([Orden(id_orden=row[0], id_mesa=row[1], id_empleado=row[2], 
@@ -94,16 +94,16 @@ class OrdenServicio:
                                      estado=row[6], nota=row[7], total=row[8]) for row in rows])
             if LISTA_ORDENES:
                 for orden in LISTA_ORDENES:
-                    detalles = ods.obtener_detalles_por_orden(orden.id_orden)
+                    detalles = ods.obtener_detalles_por_orden(orden.id_orden)   # Obtiene detalles de la orden
                     if detalles:
                         for detalle in detalles:
-                            orden.agregar_detalle(detalle)
+                            orden.agregar_detalle(detalle)          # Agrega detalles a la orden
         except Exception as e:
             print("Error al listar ordenes:", e)
 
     def obtener_ordenes_pendientes(self):
         if LISTA_ORDENES:
-            pendientes = [o for o in LISTA_ORDENES if o.estado.lower() == "pendiente"]
+            pendientes = [o for o in LISTA_ORDENES if o.estado.lower() == "pendiente"]    # Filtra pendientes
             return pendientes
         return None
 
@@ -111,18 +111,19 @@ class OrdenServicio:
         conn = Conexion()
         cursor = conn.conectar()
 
-        try:
+        try:    # Actualiza estado de la orden
             cursor.execute("""
             UPDATE ordenes SET estado = ? WHERE id_orden = ?
             """, (nuevo_estado, id_orden))
-            conn.commit()
-            return cursor.rowcount
+            conn.commit()     # Guarda cambios
+            return cursor.rowcount    # Retorna filas afectadas
         except Exception as ex:
             return None
         finally:
             conn.cerrar()
             
     def validar_orden_completa(self, orden: Orden):
+        # Valida que la orden tenga mesa, empleado y cliente asignados
         if not orden.id_mesa or not orden.id_empleado or not orden.id_cliente:
-            return False
-        return True
+            return False     # Retorna False si falta algún dato
+        return True           # Retorna True si la orden está completa

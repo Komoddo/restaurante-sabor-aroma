@@ -1,40 +1,46 @@
 from typing import List, Dict, Tuple, Optional
-from base_datos.conexion_db import Conexion
-from Modelo.Cliente import Cliente
+from base_datos.conexion_db import Conexion         # Importa la clase para manejar la conexión a la base de datos
+from Modelo.Cliente import Cliente                  # Importa la clase Cliente para representar objetos cliente
 
-from Principal import LISTA_CLIENTES
+from Principal import LISTA_CLIENTES                # Lista global que almacena temporalmente los clientes
 
+
+"""Clase que gestiona todas las operaciones relacionadas con clientes en la base de datos."""
 class ClienteServicio:
     # def __init__(self):
 
+    #Agrega un cliente a la base de datos y devuelve su ID.
     def agregar_cliente_bd(self, c: Cliente):
         
-        conn = Conexion()
-        cursor = conn.conectar()
+        conn = Conexion()   # Crea una instancia de conexión a la BD
+        cursor = conn.conectar()  # Obtiene el cursor para ejecutar consultas
 
         try:
+            # Inserta un nuevo cliente en la tabla 'clientes'
             cursor.execute("""
             INSERT INTO clientes (nombre, apellido, email, telefono) 
             VALUES (?, ?, ?, ?)""", 
             (c.nombre, c.apellido, c.email, c.telefono))
 
-            conn.commit()
-            return cursor.lastrowid
+            conn.commit()                  # Guarda los cambios en la BD
+            return cursor.lastrowid        # Retorna el ID del cliente agregado
 
         except Exception as e:
-            return []
+            return []                      # Retorna lista vacía en caso de error
         finally:
-            conn.cerrar()
+            conn.cerrar()                  # Cierra la conexión   
 
     def obtener_clientes_bd(self):
-        LISTA_CLIENTES.clear()
+        """Obtiene todos los clientes de la base de datos y actualiza LISTA_CLIENTES"""
+        LISTA_CLIENTES.clear()             # Limpia la lista antes de cargar
         conn = Conexion()
         cursor = conn.conectar()
 
         try:
-            cursor.execute("SELECT * FROM clientes")
+            cursor.execute("SELECT * FROM clientes")     # Consulta todos los clientes
             rows = cursor.fetchall()
             LISTA_CLIENTES.clear()
+            # Crea objetos Cliente por cada fila obtenida y los agrega a LISTA_CLIENTES
             return LISTA_CLIENTES.extend([Cliente(id_cliente=row[0], nombre=row[1], 
                                      apellido=row[2], email=row[3], telefono=row[4]) for row in rows])
         except Exception as ex:
@@ -43,6 +49,7 @@ class ClienteServicio:
             conn.cerrar()
 
     def obtener_cliente_por_id(self, id_cliente) -> Cliente:
+        """Devuelve un cliente de LISTA_CLIENTES según su ID."""
         if LISTA_CLIENTES:
             cliente = next((m for m in LISTA_CLIENTES if m.id_cliente == id_cliente),None)
         return cliente
@@ -74,7 +81,7 @@ class ClienteServicio:
             (c.nombre, c.apellido, c.email, c.telefono, c.id_cliente))
 
             conn.commit()
-            return cursor.rowcount
+            return cursor.rowcount      # Retorna número de filas afectadas
 
         except Exception as e:
             return 0
@@ -99,4 +106,4 @@ class ClienteServicio:
 
     def obtener_lista_clientes(self) -> List[Cliente]:
         """Devuelve la lista completa de clientes."""
-        return LISTA_CLIENTES
+        return LISTA_CLIENTES                                 # Lista que contiene todos los clientes actualmente cargado

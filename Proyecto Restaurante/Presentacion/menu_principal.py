@@ -1,31 +1,35 @@
-from Presentacion.Menu_Pedido import menu_pedido
-from Presentacion.Menu_Orden import menu_orden
-from Presentacion.Menu_Gestion import menu_gestion
-from Presentacion.Menu_Reporte import menu_reporte
+from Presentacion.Menu_Pedido import menu_pedido                  # Importa el módulo para gestionar pedidos
+from Presentacion.Menu_Orden import menu_orden                    # Importa el módulo para gestionar órdenes
+from Presentacion.Menu_Gestion import menu_gestion                # Importa el módulo para actualizaciones generales
+from Presentacion.Menu_Reporte import menu_reporte                # Importa el módulo para generar reportes
 
-from Servicio.producto_servicio import ProductoServicio
-from Servicio.Cliente_Servicio import ClienteServicio
-from Servicio.Empleado_Servicio import EmpleadoServicio
-from Servicio.Mesa_Servicio import MesaServicio
-from Servicio.Orden_Servicio import OrdenServicio
-from base_datos.restaurante_db import RestaurantDB
+from Servicio.producto_servicio import ProductoServicio           # Servicio para manejar productos
+from Servicio.Cliente_Servicio import ClienteServicio             # Servicio para manejar clientes
+from Servicio.Empleado_Servicio import EmpleadoServicio           # Servicio para manejar empleados
+from Servicio.Mesa_Servicio import MesaServicio                   # Servicio para manejar mesas
+from Servicio.Orden_Servicio import OrdenServicio                 # Servicio para manejar órdenes
+from base_datos.restaurante_db import RestaurantDB                # Clase de inicialización de la base de datos
 
-os = OrdenServicio()
-ps = ProductoServicio()
-cs = ClienteServicio()
-es = EmpleadoServicio()
-ms = MesaServicio()
+
+# Instanciación de los servicios
+os = OrdenServicio()           # Servicio de órdenes
+ps = ProductoServicio()        # Servicio de productos
+cs = ClienteServicio()         # Servicio de clientes
+es = EmpleadoServicio()       # Servicio de empleados
+ms = MesaServicio()           # Servicio de mesas
 
 def menu_principal():
     
-    RestaurantDB()
-    ps.obtener_productos_bd()
-    cs.obtener_clientes_bd()
-    es.obtener_Empleados_bd()
-    ms.obtener_mesas_bd()
+    # Inicializa la base de datos y carga los datos iniciales
+    RestaurantDB()                # Crea la conexión y estructura de la BD
+    ps.obtener_productos_bd()     # Carga los productos
+    cs.obtener_clientes_bd()      # Carga los clientes
+    es.obtener_Empleados_bd()     # Carga los empleados
+    ms.obtener_mesas_bd()         # Carga las mesas disponibles
 
 
     while True:
+        # Muestra el menú principal del sistema
         print("\n" + "="*45)
         print("SISTEMA DE RESTAURANTE 🍽️")
         print("="*45)
@@ -39,15 +43,21 @@ def menu_principal():
         opcion = input("Seleccione una opción: ")
         
         if opcion == "1":
+             # Accede al submenú de órdenes
             menu_orden()
         elif opcion == "2":
+            # Accede al submenú de pedidos
             menu_pedido()
         elif opcion == "3":
+             # Accede al submenú de gestión general
             menu_gestion()
         elif opcion == "4":
+            # Accede al submenú de reportes
             menu_reporte()
         elif opcion == "0":
+            # Sale del sistema
             print("Saliendo del sistema...")
             break
         else:
+            # Maneja opción inválida
             print("⚠ Opción incorrecta. Intente nuevamente.")

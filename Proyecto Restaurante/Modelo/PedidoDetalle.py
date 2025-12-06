@@ -1,4 +1,8 @@
+"""Esta clase representa cada detalle del pedido, como producto, cantidad y subtotal."""
+
 class PedidoDetalle:
+
+    # Inicializa los datos del detalle y calcula el subtotal
     def __init__(self, id_detalle, id_pedido,id_producto,
                  cantidad, precio_unitario, subtotal):
         self.id_detalle = id_detalle

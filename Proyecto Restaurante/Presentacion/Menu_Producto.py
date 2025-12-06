@@ -1,16 +1,24 @@
+# Importa el submenú para actualizar precios de productos
 from Presentacion.SubMenu_Actualizacion_Precios import submenu_actualizar_precios
+# Importa el servicio que maneja operaciones CRUD de productos
 from Servicio.producto_servicio import ProductoServicio
+# Importa la clase Producto que define la estructura de los productos
 from Modelo.Producto import Producto
 from Utilitario.Validacion import validar, TipoValidacion
-
-
+# Crea la instancia del servicio para gestionar productos
+# Crea una instancia de la clase ProductoServicio
+# Esto permite usar todos los métodos de ProductoServicio (agregar, actualizar, listar, eliminar productos)
+# Es decir, 'ps' es un objeto que representa el servicio de productos y nos facilita interactuar con la base de datos
 ps = ProductoServicio()
 
 def submenu_productos():
+    """Interfaz para la gestión de productos del restaurante."""
+    # Carga los productos desde la base de datos
     ps.obtener_productos_bd()
     ps.crear_categorias()
 
     while True:
+        # Menú principal de productos
         print("\n📦 MENÚ DE PRODUCTOS")
         print("1.  Listado de productos")
         print("2. ➕ Agregar Nuevo producto")
@@ -28,6 +36,7 @@ def submenu_productos():
             print(f"{'Nombre':<28}{'Descripción':<43}{'Categoría':<20}{'Precio':<10}{'Disponibilidad':>15}")
             print("="*100)
             if ps.obtener_lista_productos():
+                # Muestra cada producto con su información
                 for p in ps.obtener_lista_productos():
                     print(f"► {p.nombre:<25} | {p.descripcion:<40} | {p.categoria:<15} | S/.{p.precio:>6.2f}{('🟢' if p.disponibilidad else '🔴'):>15}")
             else:
@@ -56,7 +65,7 @@ def submenu_productos():
                         precio = float(precio)
                         break
                     print("Formato de precio inválido")
-                
+                # Selección o creación de categoría
                 while True:
                     print("\nCategorias:\n")
                     for i, cat in ps.categorias.items():
@@ -92,6 +101,7 @@ def submenu_productos():
                 print("\n¿Confirmar agregado? (s/n): ")
                 confirmar = input("➤  ").strip().lower()
                 if confirmar == 's':
+                    # Agrega el producto a la lista y a la BD
                     ps.agregar_producto_lst(nuevo_producto)
                     ps.agregar_producto_bd(nuevo_producto)
                     print(f" Producto '{nombre}' agregado exitosamente")
@@ -127,6 +137,7 @@ def submenu_productos():
                 producto = ps.obtener_producto_por_id(int(id))
                 if(producto):
                     while True:
+                        # Muestra detalles del producto seleccionado
                         print("\nRESUMEN DEL PRODUCTO")
                         print(f"\n1. Nombre: {producto.nombre}")
                         print(f"2. Descripción: {producto.descripcion}")
@@ -199,6 +210,7 @@ def submenu_productos():
                 else:
                     print("Producto no encontrado")
         elif opcion == "4":
+             # Llama al submenú para actualizar precios
              submenu_actualizar_precios()
         elif opcion == "0":
             break
