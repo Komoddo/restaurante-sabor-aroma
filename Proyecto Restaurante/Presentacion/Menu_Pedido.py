@@ -16,12 +16,10 @@ ms = MesaServicio()
 cs = ClienteServicio()
 ps = ProductoServicio()
 
-
 """Irterfaz para la gestion de los pedidos"""
 def menu_pedido():
     while True:
-        
-        
+                
         print("\n🍽 MENÚ DE PEDIDOS")
         print("1. Generar pedido desde orden")
         print("2. Ver pedidos recientes")
