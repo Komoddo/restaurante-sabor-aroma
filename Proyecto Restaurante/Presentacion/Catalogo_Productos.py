@@ -1,14 +1,19 @@
+# Importaciones de servicios y modelos usados en el catálogo
+
 from Modelo import Producto
 from Modelo.OrdenDetalle import OrdenDetalle
 from Servicio.producto_servicio import ProductoServicio
 from Servicio.Orden_Servicio import OrdenServicio
 from Servicio.OrdenDetalle_Servicio import OrdenDetalleServicio
 
-ps = ProductoServicio()
-ods = OrdenDetalleServicio()
+ps = ProductoServicio()           # servicio para manejar productos
+ods = OrdenDetalleServicio()      # servicio para manejar detalles de la orden
 
 def catalogo_productos():
+
+    """Interfaz de selección de productos: ver, buscar, agregar o quitar."""
     while True:
+        # Menú principal
         print("\n" + "="*45)
         print("SELECCION DE PRODUCTOS")
         print("="*45)
@@ -26,12 +31,14 @@ def catalogo_productos():
             print("CATÁLOGO PRODUCTOS")
             print("*"*90)
             print(f"{'ID':<6}{'Nombre':<25}{'Descripción':<40}{'Precio':>10}")
-            estructura = ps.obtener_catalogo()
+            estructura = ps.obtener_catalogo()     # obtiene productos agrupados por categoría
             if(estructura):
+                # Itera por cada categoría y sus productos
                 for categoria, items in estructura.items():
                     print("="*90)
                     print(f"📋 {categoria.upper()}")
                     print("=" * 90)
+                     # Muestra cada producto con su id, nombre, descripción y precio
                     for p in items:
                         print(f"{'0' if p.id_producto<1<0 else ''}{p.id_producto}{'.':<3}{p.nombre:<25} | {p.descripcion:<40} | S/{p.precio:>6.2f}")
                         print("-"*90)
@@ -39,12 +46,14 @@ def catalogo_productos():
                 print("sin productos*")
             print("0. <- REGRESAR")
 
+            # Selección de producto por id
             id = input(f"➡️ Seleccione un producto: ").strip()
             if (id == "0"):
                 print("Cancelando selección de productos...")
             else:
                 producto_seleccionado = ps.obtener_producto_disponible_por_id(int(id))
                 if(producto_seleccionado):
+                    # Si ya existe en la orden, preguntar si se desea actualizar la cantidad
                     if ods.validar_detalle_existente(producto_seleccionado.id_producto):
                         print("El producto ya fue agregado anteriormente ¿Desea actualizar la cantidad? (S/N)")
                         respuesta = input("➤  ").strip().lower()
@@ -56,6 +65,7 @@ def catalogo_productos():
                             else:
                                 print("Cantidad inválida. Operación cancelada.")
                     else:
+                         # Agregar nuevo detalle al orden
                         cantidad = int(input(f"Ingrese la cantidad de {producto_seleccionado.nombre} a agregar: ").strip())
                         if cantidad > 0:
                             nota = input("Ingrese una nota especial para este producto (o presione Enter para omitir): ").strip()
@@ -127,6 +137,7 @@ def catalogo_productos():
                     else:
                         print("Cantidad inválida. Operación cancelada.")
             else:
+                 # Si hay varios, permitir seleccionar por id
                 id = input(f"Seleccione un producto").strip()
                 if (id == "0"):
                     print("Cancelando selección de productos...")
@@ -167,11 +178,13 @@ def catalogo_productos():
                 print("\n" + "="*60)
                 print("PRODUCTOS SELECCIONADOS")
                 print("="*60)
+                 # Obtiene los objetos Producto correspondientes a cada detalle
                 detalle_producto = [ps.obtener_producto_disponible_por_id(d.id_producto) for d in ods.detalles]
                 for p in detalle_producto:
                     print(f"{'0' if p.id_producto<10 else ''}{p.id_producto}. {p.nombre:<25} | {p.descripcion:<45} | S/{p.precio:>6.2f}   {p.categoria:<20}")
                 print("0. <- REGRESAR")
 
+                # Seleccionar id para quitar
                 iden = input(f"Seleccione el producto que desea quitar de la orden: ").strip()
                 if (iden == "0"):
                     print("Cancelando selección de productos...")

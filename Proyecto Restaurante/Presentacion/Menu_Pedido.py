@@ -1,16 +1,16 @@
-import datetime
-from Servicio.Cliente_Servicio import ClienteServicio
-from Servicio.Mesa_Servicio import MesaServicio
-from Servicio.Pedido_Servicio import PedidoServicio
-from Servicio.Orden_Servicio import OrdenServicio
-from Servicio.OrdenDetalle_Servicio import OrdenDetalleServicio
-from Modelo.Pedido import Pedido
-from Modelo.PedidoDetalle import PedidoDetalle
+import datetime                                                     # Para manejar fechas y horas
+from Servicio.Cliente_Servicio import ClienteServicio               # Servicio que maneja operaciones sobre clientes
+from Servicio.Mesa_Servicio import MesaServicio                     # Servicio que maneja operaciones sobre mesas
+from Servicio.Pedido_Servicio import PedidoServicio                 # Servicio que maneja operaciones sobre pedidos
+from Servicio.Orden_Servicio import OrdenServicio                   # Servicio que maneja operaciones sobre órdenes
+from Servicio.OrdenDetalle_Servicio import OrdenDetalleServicio     # Servicio que maneja los detalles de las órdenes
+from Modelo.Pedido import Pedido                                    # Modelo Pedido: estructura de datos del pedido
+from Modelo.PedidoDetalle import PedidoDetalle                      # Modelo PedidoDetalle: estructura de los detalles de pedido
 
-ps = PedidoServicio()
-os = OrdenServicio()
-ms = MesaServicio()
-cs = ClienteServicio()
+ps = PedidoServicio()        # Instancia para gestionar pedidos                                       
+os = OrdenServicio()         # Instancia para gestionar órdenes
+ms = MesaServicio()          # Instancia para gestionar mesas
+cs = ClienteServicio()       # Instancia para gestionar clientes
 
 """Irterfaz para la gestion de los pedidos"""
 def menu_pedido():
@@ -26,11 +26,11 @@ def menu_pedido():
             print("-" * 90)
             print(f"{'Mesa':<15}    {'Cliente':<30}    {'Fecha':<18}     {'Total':>10}")
             print("-" * 90)
-            pendientes = os.obtener_ordenes_pendientes()
+            pendientes = os.obtener_ordenes_pendientes()      # Obtener todas las órdenes pendientes
             if pendientes:
                 for op in pendientes:
-                    mesa = ms.obtener_mesa_por_id(op.id_mesa)
-                    cliente = cs.obtener_cliente_por_id(op.id_cliente)
+                    mesa = ms.obtener_mesa_por_id(op.id_mesa)   # Obtener información de la mesa
+                    cliente = cs.obtener_cliente_por_id(op.id_cliente)   # Obtener información del cliente
                     print(f"mesa {mesa.numero:<12} | {cliente.nombre} {cliente.apellido:<26} | {op.fecha_hora:<24} | S/{op.total:>6.2f}")
                 print("0. Regresar")
                 print("\nSeleccione la mesa: ")
@@ -43,6 +43,8 @@ def menu_pedido():
                     if orden:
                         mesa = ms.obtener_mesa_por_id(orden.id_mesa)
                         cliente = cs.obtener_cliente_por_id(orden.id_cliente)
+
+                        # Mostrar detalles de la orden seleccionada
                         print(f"\n🛒 ORDEN N° {orden.id_orden} MESA {mesa.numero}")
                         print("-"*80)
                         print(f"Fecha: {datetime.strptime(orden.fecha_hora, '%Y-%m-%d %H:%M:%S')}")
@@ -51,11 +53,13 @@ def menu_pedido():
                         print(f"Estado: {orden.estado}")
                         print("="*80)
 
+
+                        # Confirmar si se desea generar pedido desde esta orden
                         print(f"Desea generar un pedido de la orden {orden.id_orden}? (s/n): ")
                         opcion = input("➤  ").strip().lower()
                         if opcion=="s":
                             
-                            # Actualizamos informacion de orden
+                            # Actualizar estado de la orden y de la mesa
                             if os.actualizar_estado_pedido_bd(orden.id_orden, "preparado"):
                                 if ms.actualizar_estado_mesa_bd(orden.id_mesa, "disponible"):
                                     if ps.agregar_pedido_bd(pedido):
