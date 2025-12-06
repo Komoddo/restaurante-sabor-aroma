@@ -42,7 +42,6 @@ def menu_pedido():
                     cliente = cs.obtener_cliente_por_id(op.id_cliente)
                     print(f"mesa {mesa.numero:<12} | {cliente.nombre} {cliente.apellido:<26} | {op.fecha_hora:<24} | S/{op.total:>6.2f}")
                 print("0. Regresar")
-                
                 print("\nSeleccione la mesa: ")
                 id = input("➤  ").strip().lower()
                 

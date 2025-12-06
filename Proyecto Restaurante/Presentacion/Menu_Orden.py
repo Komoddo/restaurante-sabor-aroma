@@ -141,10 +141,10 @@ def menu_orden():
                                     elif opcion == "2":
                                         _orden = submenu_seleccionMesa()
                                         if _orden:
-                                            ms.actualizar_estado(orden.id_mesa, "disponible")
+                                            ms.actualizar_estado_mesa_bd(orden.id_mesa, "disponible")
                                             orden.id_mesa=_orden.id_mesa
                                             orden.nro_personas=_orden.nro_personas
-                                            ms.actualizar_estado(orden.id_mesa, "ocupado")
+                                            ms.actualizar_estado_mesa_bd(orden.id_mesa, "ocupado")
                                             if os.actualizar_orden_bd(orden):
                                                 print("✅ Orden actualizada")
                                     elif opcion == "3": pass
