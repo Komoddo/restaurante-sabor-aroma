@@ -149,7 +149,7 @@ def menu_orden():
                                 print("\n1. Ver detalles")
                                 print("2. Reasignar mesa")
                                 print("3. Reasignar detalles")
-                                print("4. cancelar orden")
+                                print("4. Anular orden")
                                 print("0. Volver")
 
                                 print("\nSeleccione una opción: ")
@@ -198,7 +198,7 @@ def menu_orden():
                                         opcion = input("➤  ").strip().lower()
                                         if opcion=="s":
                                             if os.actualizar_estado_orden_bd(orden.id_orden, "cancelado"):
-                                                ms.actualizar_estado(orden.id_mesa, "disponible")
+                                                ms.actualizar_estado_mesa_bd(orden.id_mesa, "disponible")
                                                 print(f"✅ orden {orden.id_orden} cancelada con éxito")
                                             else:
                                                 print("⚠️ Error al cancelar la orden")
