@@ -28,16 +28,18 @@ def menu_orden():
 
     while True:
         # --- INTERFAZ DEL MENÚ ---
-        print("\n🧾 MENÚ DE ÓRDENES")
-        print("1. Crear nueva orden")
+        print("\n" + "-"*100)
+        print("🧾 MENÚ DE ÓRDENES")
+        print("-"*100)
+        print("\n1. Crear nueva orden")
         print("2. Agregar productos a la orden")
         print("3. Ver detalles de la orden")
-        print("4. Cerrar nueva orden")
+        print("4. Finalizar nueva orden")
         print("5. Gestionar órdenes pendientes")
         print("0. Volver")
-
-        opcion = input("Seleccione: ")
-
+        
+        print("\nSeleccione una opción: ")
+        opcion = input("➤  ").strip()
 
         # 1. CREAR NUEVA ORDEN
         if opcion == "1":
@@ -48,15 +50,13 @@ def menu_orden():
 
                 # Si se creó correctamente la orden
                 if(nueva_orden.id_orden):
-                    print(f"{' ☑️ '} Orden {nueva_orden.id_orden} en la mesa Nro. {ms.obtener_mesa_por_id(nueva_orden.id_mesa).numero}")
+                    print(f"\n{'✅'} Orden {nueva_orden.id_orden} en la mesa Nro. {ms.obtener_mesa_por_id(nueva_orden.id_mesa).numero}")
             except Exception as e:
-                print(f"{' ⚠️ '} Ocurrió un error:", e)
+                print(f"\n{'⚠️'} Ocurrió un error:", e)
 
             finally:
                 # Se actualiza la información local para mantener coherencia
-                ms.obtener_mesas_bd()
-                cs.obtener_clientes_bd()   
-
+                ms.obtener_mesas_bd()   
         # 2. AGREGAR PRODUCTOS A LA ORDEN
         elif opcion == "2":
             if(nueva_orden.id_orden):                           # Verifica que exista una orden activa
@@ -66,19 +66,18 @@ def menu_orden():
                     nueva_orden.agregar_detalles(detalles)      # Añade los nuevos detalles
                     ods.agregar_detalles_bd(detalles)           # Guarda detalles en la BD
                     os.actualizar_total_orden_bd(nueva_orden)   # Recalcula el total de la orden
-                    print("✔ Productos agregados a la orden.")
+                    print("\n✔ Productos agregados a la orden.")
             else:
-                print("No existe una orden asociada. Primero cree una orden")   
-
+                print("\nNo existe una orden asociada. Primero cree una orden")   
         # 3. MOSTRAR DETALLES DE LA ORDEN       
         elif opcion == "3":
             """Muestra el contenido actual de la orden"""
             # Validaciones básicas
             if not nueva_orden.id_orden:
-                print("Cree una orden para continuar")
+                print("\nCree una orden para continuar")
                 continue
             if not nueva_orden.detalles:
-                print("🛒 La orden esta vacia. Agregue productos para visualizarlos")
+                print("\n🛒 La orden esta vacia. Agregue productos para visualizarlos")
                 continue
             cliente = cs.obtener_cliente_por_id(nueva_orden.id_cliente)
             mesa = ms.obtener_mesa_por_id(nueva_orden.id_mesa)
@@ -97,25 +96,23 @@ def menu_orden():
                 producto = ps.obtener_producto_disponible_por_id(detalle.id_producto)
                 print(f"• {producto.nombre:<25} |  {detalle.nota if detalle.nota else 'sin detalles':<30}  |  S/{detalle.precio_unitario:>6.2f} x {detalle.cantidad} = S/{detalle.subtotal:>8.2f}")
             print("-" * 80)
-            print(f"TOTAL: S/{nueva_orden.total:.2f}")
-            print("¡Gracias por confiar en nosotros!")
+            print(f"\nTOTAL: S/{nueva_orden.total:.2f}")
+            print("\n¡Gracias por confiar en nosotros!")
             print("="*80)
-
         # 4. CERRAR ORDEN (FINALIZAR CREACIÓN)   
         elif opcion == "4":
                 if not nueva_orden.id_orden:
-                    print("No existe una orden creada")
-                print(f"✔ Orden creada {nueva_orden.id_orden}")
-                break
-        
+                    print("\nNo existe una orden creada")
+                print(f"\n✔ Orden creada {nueva_orden.id_orden}")
+                break        
         # 5. GESTIONAR ÓRDENES PENDIENTES
         elif opcion == "5":
 
             while True:
                 print("\n👥 LISTA DE ORDENES PENDIENTES")
-                print("-" * 90)
+                print("-" * 100)
                 print(f"{'ID':<8} {'Mesa':<15}    {'Cliente':<30}    {'Fecha':<18}     {'Total':>10}")
-                print("-" * 90)
+                print("-" * 100)
                 pendientes = os.obtener_ordenes_pendientes()
                 if pendientes:
                     # Imprime cada orden pendiente
@@ -128,28 +125,28 @@ def menu_orden():
                     print("\nSeleccione una orden: ")
                     id = input("➤  ").strip().lower()
                     if (id == "0"):
-                        print("Saliendo...")
+                        print("\nSaliendo...")
                         break
                     else:
-                        orden = os.obtener_orden_pendiente_por_id(int(id))
-                        if orden:
-                            while True:
+                        while True:
+                            orden = os.obtener_orden_pendiente_por_id(int(id))
+                            if orden:
                                 mesa = ms.obtener_mesa_por_id(orden.id_mesa)
                                 cliente = cs.obtener_cliente_por_id(orden.id_cliente)
-
-                                print(f"\n🛒 ORDEN PENDIENTE N° {orden.id_orden} MESA {mesa.numero}")
+                                
+                                print("\n" + "-"*80)
+                                print(f"🛒 ORDEN PENDIENTE N° {orden.id_orden} MESA {mesa.numero}")
                                 print("-"*80)
-                                print(f"Fecha: {datetime.strptime(orden.fecha_hora, '%Y-%m-%d %H:%M:%S')}")
+                                print(f"\nFecha: {datetime.strptime(orden.fecha_hora, '%Y-%m-%d %H:%M:%S')}")
                                 print(f"Cliente: {cliente.nombre} {cliente.apellido}")
                                 print(f"Mesa asignada: {mesa.numero:<10} Nro. personas: {orden.nro_personas:<10}")
                                 print(f"Estado: {orden.estado}")
-                                print("="*80)
 
                                  # --- SUBMENÚ DE ÓRDENES PENDIENTES ---
                                 print("\n1. Ver detalles")
                                 print("2. Reasignar mesa")
                                 print("3. Reasignar detalles")
-                                print("4. Anular orden")
+                                print("4. Cancelar orden")
                                 print("0. Volver")
 
                                 print("\nSeleccione una opción: ")
@@ -194,32 +191,32 @@ def menu_orden():
 
                                     # Cancelar orden
                                     elif opcion == "4":
-                                        print(f"Seguro que desea cancelar la orden de la mesa {mesa.numero}? (s/n): ")
+                                        print(f"\nSeguro que desea cancelar la orden de la mesa {mesa.numero}? (s/n): ")
                                         opcion = input("➤  ").strip().lower()
                                         if opcion=="s":
                                             if os.actualizar_estado_orden_bd(orden.id_orden, "cancelado"):
                                                 ms.actualizar_estado_mesa_bd(orden.id_mesa, "disponible")
-                                                print(f"✅ orden {orden.id_orden} cancelada con éxito")
+                                                print(f"\n✅ orden {orden.id_orden} cancelada con éxito")
                                             else:
-                                                print("⚠️ Error al cancelar la orden")
-                                        else: continue
-                                    elif opcion == "0": break
-
+                                                print("\n⚠️ Error al cancelar la orden")
+                                        else: 
+                                            continue
+                                    elif opcion == "0":
+                                        break
                                 except Exception as e:
-                                    print("Ocurrió un error:", e)
+                                    print("\nOcurrió un error:", e)
                                 finally:
                                      # Actualiza datos locales tras cada operación
                                     os.obtener_ordenes_bd()
                                     ms.obtener_mesas_bd()
                                     cs.obtener_clientes_bd()
-                        else:
-                            print("Error al consultar la orden seleccionada")   
+                            else:
+                                break  
                 else:
-                    print("No hay productos registrados")
-
+                    print("\nNo hay ordenes pendientes registradas")
+                    break
       # 0. SALIR DEL MENÚ
         elif opcion == "0": break
-
         # OPCIÓN INVÁLIDA
         else:
-            print("Opción inválida.")
+            print("\nOpción inválida.")

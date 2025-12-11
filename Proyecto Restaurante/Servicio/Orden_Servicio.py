@@ -1,6 +1,5 @@
 from base_datos.conexion_db import Conexion                           # Manejo de la conexión a la base de datos           
-from Modelo.Orden import Orden                                        # Modelo Orden
-from Modelo.Mesa import Mesa                                          # Modelo Mesa
+from Modelo.Orden import Orden                                        # Modelo Orden                                       # Modelo Mesa
 from Servicio.OrdenDetalle_Servicio import OrdenDetalleServicio       # Servicio para manejar los detalles de la orden
 from Principal import LISTA_ORDENES                                   # Lista que almacena temporalmente todas las órdenes cargadas en memoria durante la ejecución
 
@@ -13,6 +12,7 @@ class OrdenServicio:
         LISTA_ORDENES.append(orden)                 # Agrega la orden a la lista global en memoria
 
     def crear_orden_bd(self, o: Orden):
+        """Crea una nueva orden en la base de datos."""
         try:
             conn = Conexion()                          # Conexión a BD
             cursor = conn.conectar()                   # Cursor para ejecutar SQL
@@ -28,7 +28,8 @@ class OrdenServicio:
         finally:
             conn.cerrar()                                 # Cierra la conexión
 
-    def actualizar_total_orden_bd(self, o: Orden):        
+    def actualizar_total_orden_bd(self, o: Orden):
+        """Actualiza el total de una orden en la base de datos."""       
         try:
             conexion = Conexion()                           # Conexión a BD
             cursor = conexion.conectar()                    # Cursor para ejecutar SQL
@@ -41,6 +42,7 @@ class OrdenServicio:
             print("Error al obtener orden:", e)
 
     def actualizar_orden_bd(self, o: Orden):
+        """Actualiza una orden en la base de datos."""
         try:
             conexion = Conexion()
             cursor = conexion.conectar()
@@ -55,31 +57,35 @@ class OrdenServicio:
         except Exception as e:
             print("Error al obtener orden:", e)
 
-    def obtener_por_id(self, id_orden):
-        try:
-            conexion = Conexion()
-            cursor = conexion.conectar()                             # Cursor para consulta
-
-            sql = "SELECT * FROM ordenes WHERE id_orden = ?"
-            cursor.execute(sql, (id_orden,))
-            row = cursor.fetchone()                                    # Obtiene la fila correspondiente
-
-            if row:
-                return Orden(*row)
-            return None
-
-        except Exception as e:
-            print("Error al obtener orden:", e)
+    def obtener_orden_por_id(self, id_orden:int)->Orden:
+        """Busca una orden por su ID en la lista de órdenes."""
+        orden = None
+        if LISTA_ORDENES:
+            orden = next((o for o in LISTA_ORDENES if o.id_orden==id_orden),None)
+        if orden:
+            return orden
+        return None
 
     def obtener_orden_pendiente_por_id(self, id_orden:int)->Orden:
+        """Busca una orden por su ID en la lista de órdenes."""
         orden = None
         if LISTA_ORDENES:
             orden = next((o for o in LISTA_ORDENES if o.id_orden==id_orden and o.estado.lower()=="pendiente"),None)
         if orden:
             return orden
         return None
+    
+    def obtener_orden_pendiente_por_mesa_id(self, id_mesa:int)->Orden:
+        """Busca una orden por su ID en la lista de órdenes."""
+        orden = None
+        if LISTA_ORDENES:
+            orden = next((o for o in LISTA_ORDENES if o.id_mesa==id_mesa and o.estado.lower()=="pendiente"),None)
+        if orden:
+            return orden
+        return None
 
     def obtener_ordenes_bd(self):
+        """Obtiene todas las órdenes de la base de datos y actualiza LISTA_ORDENES."""
         try:
             LISTA_ORDENES.clear()          # Limpia lista antes de cargar datos
             ods = OrdenDetalleServicio()       # Servicio para obtener detalles
@@ -102,12 +108,14 @@ class OrdenServicio:
             print("Error al listar ordenes:", e)
 
     def obtener_ordenes_pendientes(self):
+        """Obtiene todas las órdenes pendientes de la lista de ordenes."""
         if LISTA_ORDENES:
             pendientes = [o for o in LISTA_ORDENES if o.estado.lower() == "pendiente"]    # Filtra pendientes
             return pendientes
         return None
 
     def actualizar_estado_orden_bd(self, id_orden, nuevo_estado):
+        """Actualiza el estado de una orden en la base de datos."""
         conn = Conexion()
         cursor = conn.conectar()
 
@@ -123,7 +131,7 @@ class OrdenServicio:
             conn.cerrar()
             
     def validar_orden_completa(self, orden: Orden):
-        # Valida que la orden tenga mesa, empleado y cliente asignados
+        """Valida que la orden tenga mesa, empleado y cliente asignados."""
         if not orden.id_mesa or not orden.id_empleado or not orden.id_cliente:
             return False     # Retorna False si falta algún dato
         return True           # Retorna True si la orden está completa

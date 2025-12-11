@@ -9,15 +9,15 @@ from Modelo.OrdenDetalle import OrdenDetalle
 
 class Orden:
     def __init__(self, 
-                 id_orden, 
-                 id_mesa, 
-                 id_empleado, 
-                 id_cliente, 
-                 fecha_hora,
-                 nro_personas,
-                 estado, 
-                 nota, 
-                 total):
+                 id_orden=0, 
+                 id_mesa=0, 
+                 id_empleado=0, 
+                 id_cliente=0, 
+                 fecha_hora=None,
+                 nro_personas=0,
+                 estado=None, 
+                 nota=None, 
+                 total=0.0):
         self.id_orden = id_orden
         self.id_mesa = id_mesa
         self.id_empleado = id_empleado

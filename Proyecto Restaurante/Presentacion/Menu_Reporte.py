@@ -5,16 +5,17 @@ from Presentacion import SubMenu_ReporteProducto
 
 def menu_reporte():
     while True:
-            print("\n" + "="*45)
+            print("\n" + "-"*100)
             print("REPORTES GENERALES 📊")
-            print("="*45)
-            print("1. 🧾 Reporte de ventas")
+            print("-"*100)
+            print("\n1. 🧾 Reporte de ventas")
             print("2. 📋 Reporte de ordenes")
             print("3. ⚙️ Reporte de productos")
             print("0. 🔙 Salir")
-            print("-"*45)
+            print("\n" + "-"*100)
 
-            opcion = input("Seleccione una opción: ")
+            print("\nSeleccione una opción: ")
+            opcion = input("➤  ").strip()
 
             if opcion == "1":
                 SubMenu_ReporteVenta()

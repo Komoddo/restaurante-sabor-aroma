@@ -9,17 +9,18 @@ def submenu_Empleados():
     while True:
         es.obtener_Empleados_bd()
         """Submenú para gestión de Empleados."""
-        print("\n" + "="*50)
+        
+        print("\n" + "-"*100)
         print("👥 GESTIÓN DE EMPLEADOS")
-        print("="*50)
-
-        print("1. Lista de Empleados")
+        print("-"*100)
+        print("\n1. Lista de Empleados")
         print("2. Nuevo Empleado")
         print("3. Actualizar Empleado")
-        print("0. Cancelar")
+        print("0. Salir")
 
         try:
-            opcion = input("\nSeleccione una opción: ").strip()
+            print("\nSeleccione una opción: ")
+            opcion = input("➤  ").strip()
 
             if opcion == "1":
                 """Muestra la lista completa de Empleados."""
@@ -117,7 +118,7 @@ def submenu_Empleados():
                     print("\n¿Confirmar agregado? (s/n): ")
                     confirmar = input("➤  ").strip().lower()
                     if confirmar == 's':
-                        if es.agregar_Empleado_bd(nuevo_empleado):
+                        if es.agregar_empleado_bd(nuevo_empleado):
                             print(f"✅ Empleado agregado exitosamente")
                         else:
                             print("❌ Error registrar el Empleado")
@@ -156,9 +157,9 @@ def submenu_Empleados():
                     print("\nSeleccione el dato que desea actualizar:")
                     opcion = input("➤  ").strip()
                     if opcion=="1":
-                        print(f"Nombre nuevo")
-                        nombre_nuevo = input("➤  ")
                         while True:
+                            print(f"Nombre nuevo")
+                            nombre_nuevo = input("➤  ")
                             if validar(nombre_nuevo, TipoValidacion.NOMBRE):
                                 break
                             print("Formato de nombre inválido")
@@ -166,9 +167,9 @@ def submenu_Empleados():
                         print("Actualizando nombre...")
                         
                     elif opcion=="2":
-                        print(f"Apellido nuevo")
-                        apellido_nuevo = input("➤  ")
                         while True:
+                            print(f"Apellido nuevo")
+                            apellido_nuevo = input("➤  ")
                             if validar(apellido_nuevo, TipoValidacion.NOMBRE):
                                 break
                             print("Formato de apellido inválido")
@@ -201,9 +202,9 @@ def submenu_Empleados():
                                 break
                             print("❗ Formato de cargo inválido")
                     elif opcion=="4":
-                        print(f"Teléfono nuevo: ")
-                        telefono_nuevo = input("➤  ").strip()
                         while True:
+                            print(f"Teléfono nuevo: ")
+                            telefono_nuevo = input("➤  ").strip()
                             if validar(telefono_nuevo, TipoValidacion.TELEFONO):
                                 break
                             print("Formato de teléfono inválido")

@@ -1,4 +1,4 @@
-from typing import List, Tuple                 # Tipos para anotaciones
+from typing import List                # Tipos para anotaciones
 from base_datos.conexion_db import Conexion    # Manejo de conexión a BD
 from Modelo.Mesa import Mesa                   # Modelo Mesa
 from Principal import LISTA_MESAS              # Lista global de mesas en memoria
@@ -8,6 +8,7 @@ class MesaServicio:
 
 # Servicio para manejar todas las operaciones sobre mesas
     def agregar_mesa(self, mesa: Mesa):
+        """Agrega una nueva mesa a la base de datos."""
         conn = Conexion()                 # Conexión a la BD
         cursor = conn.conectar()          # Cursor para ejecutar SQL
         try:
@@ -21,6 +22,7 @@ class MesaServicio:
             conn.cerrar()              # Cierra la conexión
 
     def obtener_mesas_bd(self):
+        """Obtiene todas las mesas de la base de datos y actualiza LISTA_MESAS."""
         LISTA_MESAS.clear()            # Limpia la lista antes de cargar datos
         
         conn = Conexion()
@@ -41,17 +43,27 @@ class MesaServicio:
             conn.cerrar()                   # Cierra la conexión
 
     def obtener_mesas_lst(self):
+        """Devuelve la lista completa de mesas."""
         if LISTA_MESAS:
             return LISTA_MESAS               # Retorna lista de mesas si hay dato
         return None                          # Retorna None si lista vacía  
 
     def obtener_mesa_por_id(self, id_mesa) -> Mesa:
+        """Busca una mesa por su ID en la lista de mesas."""
         if LISTA_MESAS:
              # Busca mesa en la lista por ID
             mesa = next((m for m in LISTA_MESAS if m.id_mesa == id_mesa),None)
         return mesa             # Retorna la mesa encontrada o None
+    
+    def obtener_mesa_por_numero(self, nro_mesa) -> Mesa:
+        """Busca una mesa por su número en la lista de mesas."""
+        if LISTA_MESAS:
+             # Busca mesa en la lista por número
+            mesa = next((m for m in LISTA_MESAS if m.numero == nro_mesa),None)
+        return mesa             # Retorna la mesa encontrada o None
 
     def actualizar_estado_mesa_bd(self, mesa_id, nuevo_estado):
+        """Actualiza el estado de una mesa en la base de datos."""
         conn = Conexion()
         cursor = conn.conectar()       # Cursor para ejecutar actualización
         try:
@@ -66,6 +78,7 @@ class MesaServicio:
             conn.cerrar()
 
     def obtener_mesas_disponibles(self, num_personas: int) -> List[Mesa]:
+        """Busca mesas disponibles con capacidad suficiente."""
         mesas_disponibles = []
         if LISTA_MESAS:
             # Filtra mesas disponibles con capacidad suficiente
@@ -77,7 +90,7 @@ class MesaServicio:
         return None                    # Retorna None si no hay mes
         
     def obtener_mesa_disponible_por_id(self, mesa_id: int) -> Mesa:
-        # Busca mesa específica por ID y que esté disponible
+        """Busca una mesa disponible por su ID."""
         for m in LISTA_MESAS:
             if m.id == mesa_id and m.estado == "Disponible":
                 return m
