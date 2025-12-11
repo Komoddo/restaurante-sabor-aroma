@@ -1,14 +1,14 @@
-# Importa la fecha y hora actual para registrar cuándo se crea el pedido
+# Importa la fecha y hora actual para registrar cuándo se crea el venta
 from datetime import datetime
-# Importa la clase PedidoDetalle para poder agregar detalles al pedido
-from Modelo.PedidoDetalle import PedidoDetalle
+# Importa la clase ventaDetalle para poder agregar detalles al venta
+from Modelo.VentaDetalle import ventaDetalle
 
-"""Esta clase representa un pedido y almacena su información y sus detalles."""
-class Pedido:
-    # Inicializa los datos principales del pedido al momento de crearlo
-    def __init__(self, id_pedido, id_orden, fecha, subtotal, impuestos, 
+"""Esta clase representa un venta y almacena su información y sus detalles."""
+class Venta:
+    # Inicializa los datos principales del venta al momento de crearlo
+    def __init__(self, id_venta, id_orden, fecha, subtotal, impuestos, 
                  descuento, total, metodo_pago, estado):
-        self.id_pedido = id_pedido
+        self.id_venta = id_venta
         self.id_orden = id_orden
         self.fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S") if fecha is None else fecha  #guarda la fecha y hora actual
         self.subtotal = subtotal
@@ -18,17 +18,17 @@ class Pedido:
         self.metodo_pago = "efectivo" if metodo_pago is None else metodo_pago
         self.estado = "pagado" if estado is None else estado    # puede ser Pagado o Anulado
         
-        self.detalles = []                   # aquí se guardan los detalles del pedido
+        self.detalles = []                   # aquí se guardan los detalles del venta
 
-    # Agrega un objeto PedidoDetalle a la lista de detalles
-    def agregar_detalle(self, detalle: PedidoDetalle):
+    # Agrega un objeto ventaDetalle a la lista de detalles
+    def agregar_detalle(self, detalle: ventaDetalle):
         self.detalles.append(detalle)
         self.actualizar_calculos()
         
     def agregar_detalles(self, detalles : list):
         if detalles:
             for pd in detalles:
-                pd.id_pedido = self.id_pedido
+                pd.id_venta = self.id_venta
                 self.detalles.append(pd)
         self.actualizar_calculos()
 

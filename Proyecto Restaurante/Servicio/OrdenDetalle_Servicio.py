@@ -6,19 +6,23 @@ class OrdenDetalleServicio:
         self.detalles = []
 
     def quitar_detalle_por_id(self, id: int):
+        """Quita un detalle de la lista de detalles."""
         producto = next((p for p in self.detalles if p.id_producto==id), None)
         if(producto):
             self.detalles.remove(producto)
 
     def validar_detalle_existente(self, id_producto: int) -> bool:
+        """Valida la existencia de un detalle en la lista de detalles."""
         detalle = next((d for d in self.detalles if d.id_producto==id_producto), None)
         return True if detalle else False
 
     def agregar_detalle(self, ordendetalle: OrdenDetalle):
+        """Agrega un detalle a la lista de detalles."""
         ordendetalle.actualizar_cantidad(ordendetalle.cantidad)
         self.detalles.append(ordendetalle)
 
     def actualizar_cantidad_detalle(self, id_producto: int, nueva_cantidad: int):
+        """Actualiza la cantidad de un detalle en la lista de detalles."""
         detalle = next((d for d in self.detalles if d.id_producto==id_producto), None)
         if detalle:
             detalle.actualizar_cantidad(nueva_cantidad)
@@ -30,6 +34,7 @@ class OrdenDetalleServicio:
 
 
     def agregar_detalles_bd(self, orden_detalles: list):
+        """Agrega detalles de orden a la base de datos."""
         if orden_detalles:
             try:
                 conexion = Conexion()
@@ -54,6 +59,7 @@ class OrdenDetalleServicio:
                     print("Error al agregar detalle:", e)
 
     def obtener_detalles_por_orden(self, id_orden):
+        """Obtiene detalles de orden de la base de datos."""
         try:
             conexion = Conexion()
             cursor = conexion.conectar()

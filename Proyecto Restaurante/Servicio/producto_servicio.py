@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, Optional
+from typing import List
 from base_datos.conexion_db import Conexion
 from Modelo.Producto import Producto
 from Principal import LISTA_PRODUCTOS
@@ -20,14 +20,13 @@ class ProductoServicio:
     def obtener_lista_productos(self):
         return LISTA_PRODUCTOS
     
-    # Devuelve la lista de productos disponibles
     def obtener_lista_productos_disponibles(self):
+        """Devuelve la lista de productos disponibles."""
         disponibles = [pd for pd in LISTA_PRODUCTOS if pd.disponibilidad]
         return disponibles
 
-    # Registrar nuevo producto en la base de datos
     def agregar_producto_bd(self, producto: Producto):
-
+        """Agrega un producto a la base de datos y devuelve su ID."""
         conn = Conexion()
         cursor = conn.conectar()
 
@@ -47,7 +46,7 @@ class ProductoServicio:
 
     #   Leer todos los productos de la base de datos
     def obtener_productos_bd(self):
-
+        """Obtiene todos los productos de la base de datos y actualiza LISTA_PRODUCTOS."""
         LISTA_PRODUCTOS.clear()
         conn = Conexion()
         cursor = conn.conectar()
@@ -66,22 +65,8 @@ class ProductoServicio:
         finally:
             conn.cerrar()
 
-
-
-    # Verificar existencia de registros
-    def verificar_existencia_productos(self) -> bool:
-
-        conn = Conexion()
-        cursor = conn.conectar()
-
-        cursor.execute("SELECT 1 FROM productos LIMIT 1")
-        return 0 if cursor.fetchone() else 1
-
-    # --------------------------
-    #   READ BY ID
-    # --------------------------
     def obtener_producto_por_id_bd(self, producto_id: int):
-
+        """Obtiene un producto por su ID."""
         conn = Conexion()
         cursor = conn.conectar()
 
@@ -90,11 +75,13 @@ class ProductoServicio:
         return self._fila_a_producto(row) if row else None
 
     def obtener_producto_por_id(self, id: int):
+        """Busca un producto por su ID en la lista de productos."""
         if(LISTA_PRODUCTOS):
             producto = next((p for p in LISTA_PRODUCTOS if p.id_producto==id),None)
         return producto
 
     def obtener_producto_disponible_por_id(self, id: int):
+        """Busca un producto por su ID en la lista de productos."""
         if(LISTA_PRODUCTOS):
             producto = next((p for p in LISTA_PRODUCTOS if (p.id_producto==id and p.disponibilidad)),None)
         return producto
@@ -103,14 +90,14 @@ class ProductoServicio:
     #   UPDATE
     # --------------------------
     def actualizar_producto_bd(self, producto: Producto):
-
+        """Actualiza un producto en la base de datos."""
         conn = Conexion()
         cursor = conn.conectar()
 
         cursor.execute("""
             UPDATE productos
             SET nombre=?, descripcion=?, categoria=?, disponibilidad=?
-            WHERE idProducto=?
+            WHERE id_producto=?
         """, (producto.nombre, producto.descripcion,
               producto.categoria, producto.disponibilidad, producto.id_producto))
 
@@ -118,6 +105,7 @@ class ProductoServicio:
         return cursor.rowcount
 
     def actualizar_precio_producto_bd(self, productos:list):
+        """Actualiza el precio de un producto en la base de datos."""
         conn = Conexion()
         cursor = conn.conectar()
 
@@ -126,7 +114,7 @@ class ProductoServicio:
                 cursor.execute("""
                     UPDATE productos
                     SET precio=?
-                    WHERE idProducto=?
+                    WHERE id_producto=?
                 """, (p.precio, p.id_producto))
 
             conn.commit()
@@ -137,34 +125,21 @@ class ProductoServicio:
             return None
         finally:
             conn.cerrar()
-    
-    # --------------------------
-    #   DELETE
-    # --------------------------
-    def eliminar_producto(self, producto_id):
-
-        conn = Conexion()
-        cursor = conn.conectar()
-
-        cursor.execute("DELETE FROM productos WHERE id=?", (producto_id,))
-        conn.commit()
-        return cursor.rowcount
-
-    # --------------------------
-    #   MÉTODO PRIVADO: convertir fila → objeto
-    # --------------------------
 
     def crear_categorias(self):
+        """Crea un diccionario de categorías con números consecutivos."""
         categorias = sorted({p.categoria for p in LISTA_PRODUCTOS})
         self.categorias = {i: c for i, c in enumerate(categorias, start=1)}
         return self.categorias
 
     def filtrar_productos_por_categoria(self, categoria:str):
+        """Filtra productos por categoría."""
         if LISTA_PRODUCTOS:
             productos_por_categoria = [p for p in LISTA_PRODUCTOS if p.categoria==categoria and p.disponibilidad]
             return productos_por_categoria
 
     def _fila_a_producto(self, r):
+        """Convierte una fila de la base de datos en un objeto Producto."""
         return Producto(
             id_producto=r[0],
             nombre=r[1],
@@ -183,8 +158,14 @@ class ProductoServicio:
         """Busca un producto que coincida con el nombre en la lista de productos."""
         productos = [p for p in LISTA_PRODUCTOS if nombre.strip().lower() in p.nombre.lower()]
         return productos
+    
+    def buscar_productos_disponibles(self, nombre:str) -> List[Producto]:
+        """Busca un producto que coincida con el nombre en la lista de productos."""
+        productos = [p for p in LISTA_PRODUCTOS if nombre.strip().lower() in p.nombre.lower() and p.disponibilidad]
+        return productos
          
     def obtener_catalogo(self):
+        """Obtiene el catálogo de productos."""
         if LISTA_PRODUCTOS:
             catalogo = [p for p in LISTA_PRODUCTOS if p.disponibilidad]
         categorizados = {}

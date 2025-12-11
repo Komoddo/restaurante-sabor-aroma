@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, Optional       # Tipos para anotaciones
+from typing import List, Optional       # Tipos para anotaciones
 from base_datos.conexion_db import Conexion          # Manejo de conexión a BD
 from Modelo.Empleado import Empleado                 # Modelo Empleado
 from Principal import LISTA_EMPLEADOS                # Lista global de empleados en memoria
@@ -9,8 +9,8 @@ class EmpleadoServicio:
         self.empleados = []           # Lista interna de empleados
         self.f_Empleado = []          # Lista filtrada temporal
 
-    def agregar_Empleado_bd(self, e: Empleado):
-        
+    def agregar_empleado_bd(self, e: Empleado):
+        """Agrega un empleado a la base de datos y devuelve su ID."""
         conn = Conexion()             # Conexión a la BD
         cursor = conn.conectar()      # Cursor para ejecutar SQL
 
@@ -29,6 +29,7 @@ class EmpleadoServicio:
             conn.cerrar()                       # Cierra conexión
 
     def obtener_Empleados_bd(self):
+        """Obtiene todos los empleados de la base de datos y actualiza LISTA_EMPLEADOS."""
         conn = Conexion()                       # Conexión a la BD
         cursor = conn.conectar()                # Cursor para ejecutar consultas    
 
@@ -55,6 +56,7 @@ class EmpleadoServicio:
         return empleado             # Retorna el empleado encontrado o None
   
     def actualizar_Empleado_bd(self, e: Empleado):
+        """Actualiza un empleado en la base de datos."""
         conn = Conexion()          # Conexión a BD                  
         cursor = conn.conectar()   # Cursor para ejecutar consulta
 
@@ -91,22 +93,26 @@ class EmpleadoServicio:
 
     def obtener_empleados_por_cargo(self):
         """Muestra una lista completa de empleados."""
-        cargos = {}                  # Diccionario vacío
-        for item in LISTA_EMPLEADOS:
-            cargo = item.cargo       # Obtiene cargo del empleado
-            if cargo not in cargos:
-                cargos[cargo] = []   # Crea lista si no existe
-            cargos[cargo].append(item)    # Agrega empleado
-        if(cargos):                      # Retorna diccionario de cargos
-            return cargos
+        cargos = {} # Diccionario vacío
+        activos = [activo for activo in LISTA_EMPLEADOS if activo.estado.lower()=="activo"]
+        if activos:
+            for item in activos:
+                cargo = item.cargo       # Obtiene cargo del empleado
+                if cargo not in cargos:
+                    cargos[cargo] = []   # Crea lista si no existe
+                cargos[cargo].append(item)    # Agrega empleado
+            if(cargos):                      # Retorna diccionario de cargos
+                return cargos
         return None                      # Retorna None si no hay empleados
 
     def obtener_empleados_por_cargo_estado(self):
+        """Muestra una lista completa de empleados."""
         estructura = {}
         [estructura.setdefault(e.cargo, {}).setdefault(e.estado, []).append(e) for e in LISTA_EMPLEADOS]
         return estructura                 # Retorna diccionario estructurado
 
     def obtener_empleado_por_id(self, id_empleado: int) -> Empleado:
+        """Busca un empleado por su ID en la lista de empleados."""
         empleado = next((e for e in LISTA_EMPLEADOS if (e.id==id_empleado and e.estado.lower()=="activo")),None)
         if empleado:                
             return empleado                         # Retorna empleado activo o None
@@ -117,11 +123,13 @@ class EmpleadoServicio:
         return LISTA_EMPLEADOS
     
     def crear_cargos(self):
+        """Crea un diccionario de cargos con números consecutivos."""
         lista_cargos = sorted({p.cargo for p in LISTA_EMPLEADOS})          # Obtiene cargos únicos
         cargos = {i: c for i, c in enumerate(lista_cargos, start=1)}       # Asigna números consecutivos
         return cargos                                                      # Retorna diccionario {1: 'Gerente', 2: 'Cajero', ...}
     
     def crear_estados(self):
+        """Crea un diccionario de estados con números consecutivos."""
         lista_estados = sorted({p.estado for p in LISTA_EMPLEADOS})
         estados = {i: c for i, c in enumerate(lista_estados, start=1)}
         return estados

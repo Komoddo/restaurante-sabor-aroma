@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple, Optional
+from typing import List, Optional
 from base_datos.conexion_db import Conexion         # Importa la clase para manejar la conexión a la base de datos
 from Modelo.Cliente import Cliente                  # Importa la clase Cliente para representar objetos cliente
 
@@ -24,7 +24,6 @@ class ClienteServicio:
 
             conn.commit()                  # Guarda los cambios en la BD
             return cursor.lastrowid        # Retorna el ID del cliente agregado
-
         except Exception as e:
             return []                      # Retorna lista vacía en caso de error
         finally:
@@ -57,7 +56,7 @@ class ClienteServicio:
     def validar_cliente(self, nombre: str, apellido: str) -> Cliente:
         """Busca un producto por su nombre y apellido en la lista de cliente."""
         if LISTA_CLIENTES:
-            cliente = next((c for c in LISTA_CLIENTES if nombre==c.nombre.strip().lower() and apellido==c.apellido.strip().lower()), None)
+            cliente = next((c for c in LISTA_CLIENTES if nombre.strip().lower()==c.nombre.strip().lower() and apellido.strip().lower()==c.apellido.strip().lower()), None)
             if cliente:
                 return cliente
         return None
@@ -70,6 +69,7 @@ class ClienteServicio:
         return None
     
     def actualizar_cliente_bd(self, c: Cliente):
+        """Actualiza un cliente en la base de datos."""
         conn = Conexion()
         cursor = conn.conectar()
 

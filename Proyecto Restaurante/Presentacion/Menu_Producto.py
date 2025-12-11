@@ -14,52 +14,56 @@ ps = ProductoServicio()
 def submenu_productos():
     """Interfaz para la gestión de productos del restaurante."""
     # Carga los productos desde la base de datos
-    ps.obtener_productos_bd()
-    ps.crear_categorias()
-
+    
     while True:
+        ps.obtener_productos_bd()
+        ps.crear_categorias()
         # Menú principal de productos
-        print("\n📦 MENÚ DE PRODUCTOS")
-        print("1.  Listado de productos")
-        print("2. ➕ Agregar Nuevo producto")
-        print("3. ✏️ Actualizar datos de producto")
-        print("4. 💰 Actualizar precio de producto")
-        print("0. ⬅️ Volver al menú principal")
+        print("\n" + "-"*100)
+        print("📦 MENÚ DE PRODUCTOS")
+        print("-"*100)
+        print("\n1.🍝 Listado de productos")
+        print("2. ➕ Nuevo producto")
+        print("3. ✏️ Actualizar producto")
+        print("4. 💰 Actualizar precios")
+        print("0. ⬅️ Salir")
 
-        opcion = input("Seleccione: ")
+        print("\nSeleccione una opción: ")
+        opcion = input("➤  ").strip()
 
         if opcion == "1":
             """Muestra la lista completa de productos."""
-            print("\n")
+            print("\n" + "-"*100)
             print("LISTA DE PRODUCTOS")
             print("="*100)
-            print(f"{'Nombre':<28}{'Descripción':<43}{'Categoría':<20}{'Precio':<10}{'Disponibilidad':>15}")
+            print(f"{'Nombre':<30}{'Descripción':<32}{'Categoría':<20}{'Precio':<6}{'Estado':>12}")
             print("="*100)
             if ps.obtener_lista_productos():
                 # Muestra cada producto con su información
                 for p in ps.obtener_lista_productos():
-                    print(f"► {p.nombre:<25} | {p.descripcion:<40} | {p.categoria:<15} | S/.{p.precio:>6.2f}{('🟢' if p.disponibilidad else '🔴'):>15}")
+                    print(f"► {p.nombre:<25}|   {p.descripcion[:20]+'...':<25}|     {p.categoria:<15}|   S/. {p.precio:>6.2f}{('🟢' if p.disponibilidad else '🔴'):>7}")
             else:
                 print("No hay productos registrados")   
         elif opcion == "2":
             """Submenú para agregar nuevos productos"""
-            print("\n📋 MENÚ: NUEVO PRODUCTO")
-            print("-" * 45)
+            print("\n" + "-"*100)
+            print("📋 MENÚ: NUEVO PRODUCTO")
+            print("-"*100)
             
             while True:
-                print("Nombre del producto: ")
-                nombre  = input("➤  ")
+                print("\nNombre del producto: ")
+                nombre  = input("➤  ").strip()
                 if validar(nombre, TipoValidacion.NOMBRE):
                     break
                 print("Formato de nombre inválido")
             producto = ps.validar_producto(nombre)
             
             if not producto:
-                print("Descripción: ")
+                print("\nDescripción: ")
                 descripcion = input("➤  ").strip()
                 
                 while True:
-                    print("Precio: S/ ")
+                    print("\nPrecio S/: ")
                     precio = input("➤  ")
                     if validar(precio, TipoValidacion.PRECIO):
                         precio = float(precio)
@@ -93,41 +97,44 @@ def submenu_productos():
                     precio=precio,
                     categoria=categoria)
 
-                print(f"\n📋 RESUMEN DEL NUEVO PRODUCTO:")
-                print(f"Nombre: {nombre}")
-                print(f"Precio: S/{precio:.2f}")
-                print(f"Categoría: {categoria}")
-
+                print("\n" + "-"*100)
+                print("RESUMEN DEL PRODUCTO")
+                print("-"*100)
+                print(f"\n1. {'Nombre:':>15}  {nuevo_producto.nombre}")
+                print(f"2. {'Descripción:':>15}  {nuevo_producto.descripcion}")
+                print(f"3. {'Categoria:':>15}  {nuevo_producto.categoria}")
+                print(f"4. {'Disponibilidad:':>15}  {'🟢' if nuevo_producto.disponibilidad else '🔴'}")
                 print("\n¿Confirmar agregado? (s/n): ")
                 confirmar = input("➤  ").strip().lower()
                 if confirmar == 's':
                     # Agrega el producto a la lista y a la BD
                     ps.agregar_producto_lst(nuevo_producto)
                     ps.agregar_producto_bd(nuevo_producto)
-                    print(f" Producto '{nombre}' agregado exitosamente")
+                    print(f"\nProducto '{nombre}' agregado exitosamente")
                 else:
-                    print(" Cancelando...")
+                    print("\nCancelando...")
             else:
-                print(f" Ya existe un producto con el nombre: '{nombre}'")
+                print(f"\nYa existe un producto con el nombre: '{nombre}'")
         elif opcion == "3":
             """Submenú actualizacion de productos."""
-            print("\n" + "="*100)
+            print("\n" + "-"*100)
             print("➕ ACTUALIZACIÓN DE PRODUCTOS")
-            print("="*100)
+            print("-"*100)
             print("\nNombre del producto que desea modificar: ")
-            nombre = input("➤  ")
-            print("\n")
-            print("-" * 100)
-            print(f"{'ID':<5}{'Nombre':<24}{'Descripción':<42}{'Categoría':<18}{'Precio':<10}{'Disponibilidad':>15}")
-            print("-" * 100)
+            nombre = input("➤  ").strip()
+            print("\n" + "-"*100)
+            print("LISTA DE PRODUCTOS")
+            print("="*100)
+            print(f"{'ID':<5}{'Nombre':<29}{'Descripción':<28}{'Categoría':<20}{'Precio':<6}{'Estado':>12}")
+            print("="*100)
             productos = ps.buscar_productos(nombre)
             if productos:
                 for p in productos:
-                    print(f"{'0' if p.id_producto<10 else ''}{(str(p.id_producto)+'.'):<5}{p.nombre:<20} | {p.descripcion:<40} | {p.categoria:<15} | S/{p.precio:>6.2f}{('🟢' if p.disponibilidad else '🔴'):>15}")
+                    print(f"{'0' if p.id_producto<10 else ''}{(str(p.id_producto)+'.'):<5}{p.nombre:<25}|   {p.descripcion[:20]+'...':<25}|    {p.categoria:<15}|  S/. {p.precio:>6.2f}{('🟢' if p.disponibilidad else '🔴'):>6}")
             else:
                 print("No hay productos registrados")
                 continue
-            print(f"{'0.':<5} 🔙 Regresar")
+            print(f"{'0.':<4} Salir")
 
             print("\nSeleccione un producto: ")
             id = input("➤  ").strip()
@@ -138,28 +145,30 @@ def submenu_productos():
                 if(producto):
                     while True:
                         # Muestra detalles del producto seleccionado
-                        print("\nRESUMEN DEL PRODUCTO")
-                        print(f"\n1. Nombre: {producto.nombre}")
-                        print(f"2. Descripción: {producto.descripcion}")
-                        print(f"3. Categoria: {producto.categoria}")
-                        print(f"4. Disponibilidad: {'Disponible' if producto.disponibilidad else 'No disponible'}")
-                        print("0. ⬅️ Salir")
+                        print("\n" + "-"*100)
+                        print("RESUMEN DEL PRODUCTO")
+                        print("-"*100)
+                        print(f"\n1. {'Nombre:':>15} {producto.nombre}")
+                        print(f"2. {'Descripción:':>15} {producto.descripcion}")
+                        print(f"3. {'Categoria:':>15} {producto.categoria}")
+                        print(f"4. {'Disponibilidad:':>15} {'🟢' if producto.disponibilidad else '🔴'}")
+                        print(f"0. {'Salir':>15}")
 
-                        print("\nSeleccione el dato que desea actualizar")
+                        print("\nSeleccione el dato que desea actualizar:")
                         opcion = input("➤  ").strip()
                         if opcion=="1":
-                            print(f"Nombre nuevo para {producto.nombre}")
-                            nombre_nuevo = input("➤  ")
                             while True:
+                                print(f"\nNombre nuevo para {producto.nombre}")
+                                nombre_nuevo = input("➤  ")
                                 if validar(nombre_nuevo, TipoValidacion.NOMBRE):
                                     break
-                                print("Formato de nombre inválido")
+                                print("\nFormato de nombre inválido")
                             producto.nombre = nombre_nuevo
-                            print("Actualizando nombre...")
+                            print("\nActualizando nombre...")
                         elif opcion=="2":
-                            print(f"Descripción nueva para {producto.nombre}")
+                            print(f"\nDescripción nueva para {producto.nombre}")
                             producto.descripcion = input("➤  ").strip()
-                            print("Actualizando descripción...")
+                            print("\nActualizando descripción...")
                         elif opcion=="3":
                             while True:
                                 print("\nCategorias:")
@@ -174,45 +183,45 @@ def submenu_productos():
                                     if cat_id in range(1, num_cat + 1):
                                         categoria = ps.categorias[cat_id]
                                     elif cat_id == num_cat + 1:
-                                        categoria = input("Nombre de la nueva categoría: ").strip()
+                                        categoria = input("\nNombre de la nueva categoría: ").strip()
                                         if not validar(categoria, TipoValidacion.NOMBRE):
-                                            print("Formato de nombre inválido")
+                                            print("\nFormato de nombre inválido")
                                             continue
                                     else:
-                                        print("Opción inválida")
+                                        print("\npción inválida")
                                         continue
 
                                     producto.categoria = categoria
-                                    print("Actualizando categoría...")
+                                    print("\nActualizando categoría...")
                                     break
-                                print("Formato de categoría inválido")
+                                print("\nFormato de categoría inválido")
                         elif opcion=="4":
-                            print("¿Desea cambiar el estado del producto? (s/n)")
+                            print("\n¿Desea cambiar el estado del producto? (s/n)")
                             respuesta = input("➤  ").strip().lower()
                             if respuesta=="s":
                                 producto.disponibilidad = False if producto.disponibilidad else True
-                                print("Actualizando categoría...")
+                                print("\nActualizando categoría...")
                         elif opcion=="0":
-                            print("¿Desea guardar los cambios realizados? (s/n)")
+                            print("\n¿Desea guardar los cambios realizados? (s/n)")
                             respuesta = input("➤  ").strip().lower()
                             if respuesta=="s":
                                 if ps.actualizar_producto_bd(producto):
-                                    print("✔️ Producto actualizado con exito")
+                                    print("\n✔️ Producto actualizado con exito")
                                     break
                                 else:
-                                    print("❌ Error al actualizar el producto")
+                                    print("\n❌ Error al actualizar el producto")
                                     break
                             else:
-                                print("🚶‍♂️ Cancelando cambios...")
+                                print("\n🚶‍♂️ Cancelando cambios...")
                                 break
                         else:
-                            print("Respuesta inválida")
+                            print("\nRespuesta inválida")
                 else:
-                    print("Producto no encontrado")
+                    print("\nProducto no encontrado")
         elif opcion == "4":
              # Llama al submenú para actualizar precios
              submenu_actualizar_precios()
         elif opcion == "0":
             break
         else:
-            print("Opción inválida.")
+            print("\nOpción inválida.")

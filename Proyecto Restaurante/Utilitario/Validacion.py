@@ -4,6 +4,7 @@ from datetime import datetime
 
 class TipoValidacion(Enum):
     ENTERO = "entero"
+    DECIMAL = "decimal"
     PRECIO = "precio"
     DNI = "dni"
     EMAIL = "email"
@@ -14,6 +15,13 @@ class TipoValidacion(Enum):
 def validar_entero(valor):
     try:
         return int(valor) >= 0
+    except:
+        return False
+
+def validar_decimal(valor):
+    try:
+        valor = float(valor)
+        return True
     except:
         return False
 
@@ -48,6 +56,9 @@ def validar(valor, tipo: TipoValidacion):
     
     if tipo == TipoValidacion.ENTERO:
         return validar_entero(valor)
+    
+    if tipo == TipoValidacion.DECIMAL:
+        return validar_decimal(valor)
     
     if tipo == TipoValidacion.PRECIO:
         return validar_precio(valor)

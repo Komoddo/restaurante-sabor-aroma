@@ -6,18 +6,18 @@ from Presentacion.Menu_Producto import submenu_productos
 def menu_gestion():
         """Menú especializado para gestionar todas las actualizaciones."""
         while True:
-            print("\n" + "="*60)
-            print("🔄 MENÚ DE ACTUALIZACIONES - RESTAURANTE")
-            print("="*60)
+            print("\n" + "-"*100)
+            print("🔄 MENÚ DE ACTUALIZACIONES")
+            print("-"*100)
             print("1. 💰 Gestionar Productos")
             print("2. 📦 Gestionar Clientes")
             print("3. 👥 Gestionar Empleado")
-            print("4. 👥 Gestionar Mesas")
+            # print("4. 👥 Gestionar Mesas")
             print("0. ⬅️  Volver al Menú Principal")
-            print("="*60)
 
             try:
-                opcion = input("Seleccione una opción: ").strip()
+                print("\nSeleccione una opción: ")
+                opcion = input("➤  ").strip()
 
                 if opcion == "1":
                     submenu_productos()
